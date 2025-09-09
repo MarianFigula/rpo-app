@@ -24,7 +24,7 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
                     <h2 className="text-xl font-semibold text-gray-900">{title}</h2>
                     <button
                         onClick={onClose}
-                        className="text-gray-400 hover:text-gray-600 transition-colors"
+                        className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
                     >
                         <X className="w-6 h-6" />
                     </button>

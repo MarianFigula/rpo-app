@@ -1,7 +1,9 @@
 import {PlusIcon} from "lucide-react";
-import AdvertisementCard, {AdvertisementCardProps} from "./AdvertisementCard.tsx";
+import AdvertisementCard, {AdvertisementData} from "./AdvertisementCard.tsx";
+import {Modal} from "./Modal.tsx";
+import {useState} from "react";
 
-const sampleAdvertisements: AdvertisementCardProps[] = [
+const sampleAdvertisements: AdvertisementData[] = [
     {
         companyTitle: "TechSolutions Slovakia s.r.o.",
         ico: "12345678",
@@ -45,6 +47,7 @@ const sampleAdvertisements: AdvertisementCardProps[] = [
 ];
 
 const AdvertSection = () => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
     const handleEdit = () => {
         console.log("editing")
     };
@@ -54,8 +57,12 @@ const AdvertSection = () => {
     };
 
     const openModal = () => {
+        setIsModalOpen(true);
+    };
 
-    }
+    const closeModal = () => {
+        setIsModalOpen(false);
+    };
 
     return (
         <>
@@ -83,6 +90,15 @@ const AdvertSection = () => {
                     />
                 ))}
             </div>
+            <Modal
+                isOpen={isModalOpen}
+                onClose={closeModal}
+                title="Nový inzerát"
+            >
+                <div className="space-y-4">
+                    <p className="text-gray-600">form</p>
+                </div>
+            </Modal>
         </>
 
     )
