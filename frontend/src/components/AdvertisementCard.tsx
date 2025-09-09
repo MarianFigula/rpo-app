@@ -12,17 +12,19 @@ export interface AdvertisementCardProps {
     advertisementText: string;
 }
 
-const AdvertisementCard = ({
-                               advertisement,
-                               onEdit,
-                               onRemove,
-                           }: {
-    advertisement: AdvertisementCardProps;
-}) => {
+const AdvertisementCard = (
+    {
+        advertisement,
+        onEdit,
+        onRemove,
+    }: {
+        advertisement: AdvertisementCardProps;
+    }) => {
     const fullAddress = `${advertisement.address}, ${advertisement.city}, ${advertisement.country}`;
 
     return (
-        <div className="group animate-fade-up bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+        <div
+            className="group animate-fade-up bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
             <div className="flex items-start gap-4 mb-6">
                 <div className="relative flex-shrink-0">
                     <img
@@ -38,12 +40,12 @@ const AdvertisementCard = ({
                     </h3>
 
                     <div className="flex items-center gap-2 text-sm text-gray-500 mb-2">
-                        <Building2 className="w-4 h-4 flex-shrink-0" />
+                        <Building2 className="w-4 h-4 flex-shrink-0"/>
                         <span className="font-mono">IČO: {advertisement.ico}</span>
                     </div>
 
                     <div className="flex items-start gap-2 text-sm text-gray-500">
-                        <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5" />
+                        <MapPin className="w-4 h-4 flex-shrink-0 mt-0.5"/>
                         <span className="line-clamp-2 text-left">{fullAddress}</span>
                     </div>
                 </div>
@@ -60,13 +62,13 @@ const AdvertisementCard = ({
                     onClick={onEdit}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-amber-400 text-amber-600 hover:bg-yellow-50 transition cursor-pointer"
                 >
-                    <Edit className="w-4 h-4" /> Upraviť
+                    <Edit className="w-4 h-4"/> Upraviť
                 </button>
                 <button
                     onClick={onRemove}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-red-400 text-red-600 hover:bg-red-50 transition cursor-pointer"
                 >
-                    <Trash2 className="w-4 h-4" /> Odstrániť
+                    <Trash2 className="w-4 h-4"/> Odstrániť
                 </button>
             </div>
         </div>
