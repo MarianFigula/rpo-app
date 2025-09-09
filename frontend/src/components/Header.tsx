@@ -12,13 +12,13 @@ const Header = () => {
     }, []);
 
     return (
-        <header className={`fixed top-0 w-full z-50 transition-all duration-300 border-b-1 border-border/50 ${
-            isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border/50' : 'bg-transparent'
-        }`}>
-            <nav className="px-6 py-4">
+        //${ isScrolled ? 'bg-background/95 backdrop-blur-sm shadow-sm border-border/50' : 'bg-transparent'
+        //         }
+        <header className={`fixed top-0 w-full z-50 transition-all duration-300 bg-indigo-900`}>
+            <nav className="px-8 py-8">
                 <div className="flex items-center justify-center">
-                    <div className="text-3xl font-bold">
-                        Company advertisement manager
+                    <div className="text-3xl font-bold text-white">
+                        RPO Advert
                     </div>
                 </div>
             </nav>
