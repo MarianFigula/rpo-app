@@ -16,9 +16,10 @@ interface AdvertisementCardProps {
     advertisement: AdvertisementData;
     onEdit: () => void;
     onRemove: () => void;
+    onDownload: () => void;
 }
 
-const AdvertisementCard = ({ advertisement, onEdit, onRemove }: AdvertisementCardProps) => {
+const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: AdvertisementCardProps) => {
 
     const fullAddress = `${advertisement.address}, ${advertisement.city}, ${advertisement.country}`;
 
@@ -57,20 +58,25 @@ const AdvertisementCard = ({ advertisement, onEdit, onRemove }: AdvertisementCar
                 </p>
             </div>
 
-            <div className="flex items-center justify-end gap-3 pt-3 border-t border-gray-200">
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-gray-200 mb-8">
                 <button
                     onClick={onEdit}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-amber-400 text-amber-600 hover:bg-yellow-50 transition cursor-pointer"
                 >
-                    <Edit className="w-4 h-4"/> Upraviť
+                    <Edit className="w-4 h-4"/> Edit
                 </button>
                 <button
                     onClick={onRemove}
                     className="flex items-center gap-1 px-3 py-1.5 rounded-lg border border-red-400 text-red-600 hover:bg-red-50 transition cursor-pointer"
                 >
-                    <Trash2 className="w-4 h-4"/> Odstrániť
+                    <Trash2 className="w-4 h-4"/> Delete
                 </button>
             </div>
+            <button onClick={onDownload}
+                    className="w-full px-3 py-1.5 rounded-lg border border-indigo-400 text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+            >
+                Download PDF
+            </button>
         </div>
     );
 };
