@@ -2,7 +2,7 @@ import {Building2, Edit, MapPin, Trash2} from "lucide-react";
 import companyLogoPlaceholder from "../assets/company-logo-placeholder.png";
 
 
-export interface AdvertisementCardProps {
+export interface AdvertisementData {
     companyLogo?: string;
     companyTitle: string;
     ico: string;
@@ -12,14 +12,14 @@ export interface AdvertisementCardProps {
     advertisementText: string;
 }
 
-const AdvertisementCard = (
-    {
-        advertisement,
-        onEdit,
-        onRemove,
-    }: {
-        advertisement: AdvertisementCardProps;
-    }) => {
+interface AdvertisementCardProps {
+    advertisement: AdvertisementData;
+    onEdit: () => void;
+    onRemove: () => void;
+}
+
+const AdvertisementCard = ({ advertisement, onEdit, onRemove }: AdvertisementCardProps) => {
+
     const fullAddress = `${advertisement.address}, ${advertisement.city}, ${advertisement.country}`;
 
     return (
