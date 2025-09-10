@@ -34,7 +34,6 @@ class CompanyRepository
         $query = "SELECT
             c.name,
             c.ico,
-            c.formatedAddress,
             c.street,
             c.building_number,
             c.postal_code,

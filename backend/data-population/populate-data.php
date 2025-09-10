@@ -126,14 +126,13 @@ class RPODataPopulator {
             }
 
             $stmt = $this->conn->prepare("
-                INSERT INTO company (name, ico, formatedAddress, street, building_number, postal_code, city, country)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO company (name, ico, street, building_number, postal_code, city, country)
+                VALUES (?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
                 $name,
                 $ico,
-                $address['formatedAddress'] ?? null,
                 $address['street'] ?? null,
                 $address['building_number'] ?? null,
                 $address['postal_code'] ?? null,
@@ -207,10 +206,6 @@ class RPODataPopulator {
                     'postal_code' => $address['postalCodes'][0] ?? null,
                     'city' => $address['municipality']['value'] ?? null,
                     'country' => $address['country']['value'] ?? null,
-                    'formatedAddress' =>
-                        ($address['municipality']['value'] ?? '') . ', ' .
-                        ($address['street'] ?? '') . ' ' .
-                        ($address['buildingNumber'] ?? '')
                 ];
             }
         }
@@ -232,10 +227,6 @@ class RPODataPopulator {
                 'postal_code' => $latestAddress['postalCodes'][0] ?? null,
                 'city' => $latestAddress['municipality']['value'] ?? null,
                 'country' => $latestAddress['country']['value'] ?? null,
-                'formatedAddress' =>
-                    ($address['municipality']['value'] ?? '') . ', ' .
-                    ($address['street'] ?? '') . ' ' .
-                    ($address['buildingNumber'] ?? '')
             ];
         }
 
