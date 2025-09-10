@@ -16,7 +16,7 @@ class AdvertisementRepository
         $this->conn = $database->getConnection();
     }
 
-    public function addAdvertisement($data)
+    public function addAdvertisement($data): bool
     {
         if (empty($data)){
             return false;
