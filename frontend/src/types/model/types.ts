@@ -1,4 +1,5 @@
 export interface Company {
+    id: string;
     name: string;
     ico: string;
     street: string;
@@ -18,13 +19,17 @@ export type CompanyCardModel = Omit<Company, 'score' | 'created_at' | 'updated_a
 export type CompanySearch = Omit<Company, 'logo_url' | 'created_at' | 'updated_at'>
 
 export interface Advertisement {
-    company: Company, // mozno tu dat len company id
+    id: string,
+    company_id: string,
     text: string;
     created_at: string,
     updated_at: string
 }
 
+
 export interface AdvertisementCardModel {
+    id: string,
     company: CompanyCardModel,
     text: string,
+    created_at: string,
 }
