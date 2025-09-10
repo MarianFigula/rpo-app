@@ -61,4 +61,25 @@ class CompanyRepository
 
     }
 
+
+    /**
+     * @param string $ico
+     * @return string
+     * @throws Exception
+     */
+    public function getIdByIco(string $ico = ''): string
+    {
+        if (empty($ico)) return '';
+
+        $query = "SELECT c.id from company c WHERE c.ico = :ico";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->bindParam(':ico', $ico);
+            $stmt->execute();
+            return $stmt->fetch(PDO::FETCH_ASSOC);
+        }catch (PDOException $e) {
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+    }
 }
