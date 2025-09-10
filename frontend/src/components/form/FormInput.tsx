@@ -2,7 +2,7 @@ import React from "react";
 
 interface FormInputProps {
     label: string;
-    type?: "text" | "email" | "password" | "number" | "tel" | "url" | "select" | "textarea";
+    type?: "text" | "email" | "password" | "number" | "tel" | "url" | "select" | "textarea" | "file";
     value: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     options?: string[];
@@ -10,6 +10,8 @@ interface FormInputProps {
     placeholder?: string;
     className?: string;
     disabled?: boolean;
+    accept?: string;
+    multiple?: boolean;
 }
 
 export function FormInput(
@@ -20,6 +22,8 @@ export function FormInput(
         onChange,
         options = [],
         required = false,
+        accept,
+        multiple,
         ...props
     }: FormInputProps) {
     const id = `form-input-${label.toLowerCase()}`;
@@ -60,6 +64,17 @@ export function FormInput(
                     onChange={onChange}
                     className={`${baseInputClasses}`}
                     required={required}
+                    {...props}
+                />
+            ) : type === "file" ? (
+                <input
+                    id={id}
+                    type="file"
+                    onChange={onChange}
+                    className={`${baseInputClasses}`}
+                    required={required}
+                    accept={accept}
+                    multiple={multiple}
                     {...props}
                 />
             ) : (
