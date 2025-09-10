@@ -1,13 +1,13 @@
 <?php
 
-namespace Company\Process;
+namespace Company\Repository;
 
 use config\Database;
 use Exception;
 use PDO;
 use PDOException;
 
-class GetCompaniesByIcoOrName
+class CompanyRepository
 {
 
     private ?PDO $conn;
@@ -21,11 +21,16 @@ class GetCompaniesByIcoOrName
     /**
      * @param string $searchQuery
      * @param int $limit
-     * @return array|false
+     * @return array
      * @throws Exception
      */
-    public function get(string $searchQuery = '', int $limit = 10)
+    public function getByNameOrIco(string $searchQuery = '', int $limit = 10): array
     {
+
+        if (empty(trim($searchQuery))) {
+            return [];
+        }
+
         $query = "SELECT
             c.name,
             c.ico,
