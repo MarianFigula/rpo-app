@@ -118,27 +118,28 @@ class RPODataPopulator {
 
             $address = $this->extractCurrentAddress($companyData);
 
-            $establishment = $this->exctractEstablishment($companyData);
             $stmt = $this->conn->prepare("SELECT id FROM company WHERE ico = ?");
             $stmt->execute([$ico]);
             if ($stmt->fetch()) {
-                echo "Company with ICO {$ico} already exists, skipping\n";
+                echo "company with ICO {$ico} already exists, skipping\n";
                 return false;
             }
 
             $stmt = $this->conn->prepare("
-                INSERT INTO company (name, ico, street, building_number, postal_code, city, country)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO company (name, ico, formatedAddress, street, building_number, postal_code, city, country)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?)
             ");
 
             $stmt->execute([
                 $name,
                 $ico,
+                $address['formatedAddress'] ?? null,
                 $address['street'] ?? null,
                 $address['building_number'] ?? null,
                 $address['postal_code'] ?? null,
                 $address['city'] ?? null,
-                $address['country'] ?? 'Slovenská republika'
+                $address['country'] ?? null
+
             ]);
 
             echo "Inserted company: {$name} (ICO: {$ico})";
@@ -205,7 +206,11 @@ class RPODataPopulator {
                     'building_number' => $address['buildingNumber'] ?? null,
                     'postal_code' => $address['postalCodes'][0] ?? null,
                     'city' => $address['municipality']['value'] ?? null,
-                    'country' => $address['country']['value'] ?? null
+                    'country' => $address['country']['value'] ?? null,
+                    'formatedAddress' =>
+                        ($address['municipality']['value'] ?? '') . ', ' .
+                        ($address['street'] ?? '') . ' ' .
+                        ($address['buildingNumber'] ?? '')
                 ];
             }
         }
@@ -226,7 +231,11 @@ class RPODataPopulator {
                 'building_number' => $latestAddress['buildingNumber'] ?? null,
                 'postal_code' => $latestAddress['postalCodes'][0] ?? null,
                 'city' => $latestAddress['municipality']['value'] ?? null,
-                'country' => $latestAddress['country']['value'] ?? null
+                'country' => $latestAddress['country']['value'] ?? null,
+                'formatedAddress' =>
+                    ($address['municipality']['value'] ?? '') . ', ' .
+                    ($address['street'] ?? '') . ' ' .
+                    ($address['buildingNumber'] ?? '')
             ];
         }
 
