@@ -13,7 +13,7 @@ export interface Company {
 }
 
 
-export type CompanyCard = Omit<Company, 'score' | 'created_at' | 'updated_at'>
+export type CompanyCardModel = Omit<Company, 'score' | 'created_at' | 'updated_at'>
 
 export type CompanySearch = Omit<Company, 'logo_url' | 'created_at' | 'updated_at'>
 
@@ -25,6 +25,6 @@ export interface Advertisement {
 }
 
 export interface AdvertisementCardModel {
-    company: CompanyCard,
+    company: CompanyCardModel,
     text: string,
 }

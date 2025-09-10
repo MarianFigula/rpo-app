@@ -1,12 +1,11 @@
-import type {AdvertisementCardModel, CompanySearch} from "../model/types.ts";
+import type {AdvertisementCardModel, CompanyCardModel} from "../model/types.ts";
 import React from "react";
-import type {AdvertisementData} from "../../components/form/AdvertisementForm.tsx";
 
 
 export interface SearchBarProps {
     searchId: string;
     placeholder?: string;
-    onCompanySelect?: (company: CompanySearch) => void;
+    onCompanySelect?: (company: CompanyCardModel) => void;
 }
 
 export interface AdvertisementCardProps {
@@ -25,7 +24,7 @@ export interface ModalProps {
 }
 
 export interface AdvertisementFormProps {
-    initialData?: AdvertisementData;
-    onSubmit: (data: AdvertisementData) => void;
+    initialData?: AdvertisementCardModel;
+    onSubmit: (data: AdvertisementCardModel) => void;
     isEditing?: boolean;
 }

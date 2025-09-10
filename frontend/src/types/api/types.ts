@@ -11,3 +11,9 @@ export interface ApiGetResponse {
         companies: Company[];
     };
 }
+
+
+export interface ApiPostResponse {
+    success: boolean;
+    message: string;
+}
