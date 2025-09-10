@@ -39,6 +39,7 @@ class CompanyRepository
             c.postal_code,
             c.city,
             c.country,
+            c.logo_url,
             MATCH(c.name, c.ico) AGAINST (:query IN BOOLEAN MODE) as score
             FROM company c 
             WHERE MATCH(c.name, c.ico) AGAINST (:query IN BOOLEAN MODE)
