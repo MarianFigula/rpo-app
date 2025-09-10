@@ -5,10 +5,11 @@ interface ModalProps {
     isOpen: boolean;
     onClose: () => void;
     title: string;
+    isEditing?: boolean;
     children: React.ReactNode;
 }
 
-export function Modal({ isOpen, onClose, title, children }: ModalProps) {
+export function Modal({ isOpen, onClose, title, isEditing = false, children }: ModalProps) {
     if (!isOpen) return null;
 
     return (
@@ -17,11 +18,11 @@ export function Modal({ isOpen, onClose, title, children }: ModalProps) {
             onClick={onClose}
         >
             <div
-                className="bg-white rounded-lg shadow-xl max-w-md w-full mx-4 max-h-[90vh] h-[80vh] overflow-y-auto"
+                className="bg-white rounded-lg shadow-xl max-w-[60vw] mx-4 max-h-[90vh] h-[80vh] overflow-y-auto"
                 onClick={(e) => e.stopPropagation()}
             >
                 <div className="flex items-center justify-between p-6 border-b border-gray-200">
-                    <h2 className="text-2xl font-semibold text-gray-900">{title}</h2>
+                    <h2 className="text-2xl font-semibold text-gray-900">{isEditing ? `Edit ${title}` : `Add ${title}`}</h2>
                     <button
                         onClick={onClose}
                         className="text-gray-400 hover:text-gray-600 transition-colors cursor-pointer"
