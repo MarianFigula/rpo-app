@@ -32,6 +32,7 @@ class CompanyRepository
         }
 
         $query = "SELECT
+            c.id,
             c.name,
             c.ico,
             c.street,
@@ -78,6 +79,47 @@ class CompanyRepository
             $stmt->bindParam(':ico', $ico);
             $stmt->execute();
             return $stmt->fetch(PDO::FETCH_ASSOC);
+        }catch (PDOException $e) {
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+    }
+
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
+    public function updateCompanyById($data) : bool
+    {
+        if (empty($data) || !isset($data['id'])){
+            return false;
+        }
+
+        $query = "UPDATE company SET 
+                name = ?,
+                ico = ?,
+                street = ?,
+                building_number = ?,
+                postal_code = ?,
+                city = ?,
+                country = ?,
+                logo_url = ? WHERE id = ?";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            return $stmt->execute([
+                $data['name'],
+                $data['ico'],
+                $data['street'],
+                $data['building_number'],
+                $data['postal_code'],
+                $data['city'],
+                $data['country'],
+                $data['logo_url'],
+                (int)$data['id']
+            ]);
+
         }catch (PDOException $e) {
             throw new Exception("Database query failed: " . $e->getMessage());
         }
