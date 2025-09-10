@@ -1,29 +1,26 @@
 import React, {useState, useEffect} from "react";
 import {Form} from "./Form";
 import {FormInput} from "./FormInput";
+import type {AdvertisementFormProps} from "../../types/props/types.ts";
 
 export interface AdvertisementData {
     companyTitle: string;
     ico: string;
     address: string;
+    buildingNumber: "",
     city: string;
     country: string;
-    advertisementText: string;
-}
-
-interface AdvertisementFormProps {
-    initialData?: AdvertisementData;
-    onSubmit: (data: AdvertisementData) => void;
-    isEditing?: boolean;
+    text: string;
 }
 
 const emptyAdvertisement: AdvertisementData = {
     companyTitle: "",
     ico: "",
     address: "",
+    buildingNumber: "",
     city: "",
     country: "",
-    advertisementText: "",
+    text: "",
 };
 
 export function AdvertisementForm(
@@ -70,7 +67,7 @@ export function AdvertisementForm(
             setError("Mesto je povinné");
             return;
         }
-        if (!formData.advertisementText.trim()) {
+        if (!formData.text.trim()) {
             setError("Text inzerátu je povinný");
             return;
         }
@@ -107,7 +104,14 @@ export function AdvertisementForm(
                     value={formData.address}
                     onChange={handleInputChange('address')}
                     required
-                    placeholder="Main Street 123"
+                    placeholder="Street"
+                />
+                <FormInput
+                    label="Building number"
+                    value={formData.address}
+                    onChange={handleInputChange('buildingNumber')}
+                    required
+                    placeholder="123"
                 />
 
                 <FormInput
@@ -129,8 +133,8 @@ export function AdvertisementForm(
                 <FormInput
                     label="Advertisement text"
                     type="textarea"
-                    value={formData.advertisementText}
-                    onChange={handleInputChange('advertisementText')}
+                    value={formData.text}
+                    onChange={handleInputChange('text')}
                     required
                     placeholder=""
                     rows={8}

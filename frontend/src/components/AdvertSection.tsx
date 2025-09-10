@@ -1,58 +1,92 @@
 import {PlusIcon} from "lucide-react";
-import AdvertisementCard from "./AdvertisementCard.tsx";
+import type {AdvertisementCardModel} from "../types/model/types.ts";
 import {Modal} from "./Modal.tsx";
 import {useState} from "react";
 import SearchBar from "./SearchBar.tsx";
 import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
-import type {Advertisement} from "../types/model/types.ts";
+import AdvertisementCard from "./AdvertisementCard.tsx";
 
-const sampleAdvertisements: Advertisement[] = [
+
+const sampleAdvertisementsCard: AdvertisementCardModel[] = [
     {
-        companyTitle: "TechSolutions Slovakia s.r.o.",
-        ico: "12345678",
-        address: "Hlavná ulica 123",
-        city: "Bratislava",
-        country: "Slovensko",
-        advertisementText: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
-    },
-    {
-        companyTitle: "Zelená záhrada",
-        ico: "87654321",
-        address: "Kvetná 45",
-        city: "Košice",
-        country: "Slovensko",
-        advertisementText: "Profesionálne záhradnícke služby a krajinná architektúra. Návrhujeme a realizujeme záhrady, parky a verejné priestory. Ponúkame aj pravidelnú údržbu zelene a dodávku kvalitných rastlín.",
-    },
-    {
-        companyTitle: "Zelená záhrada",
-        ico: "87654321",
-        address: "Kvetná 45",
-        city: "Košice",
-        country: "Slovensko",
-        advertisementText: "Profesionálne záhradnícke služby a krajinná architektúra. Návrhujeme a realizujeme záhrady, parky a verejné priestory. Ponúkame aj pravidelnú údržbu zelene a dodávku kvalitných rastlín.",
-    },
-    {
-        companyTitle: "Zelená záhrada",
-        ico: "87654321",
-        address: "Kvetná 45",
-        city: "Košice",
-        country: "Slovensko",
-        advertisementText: "Profesionálne záhradnícke služby a krajinná architektúra. Návrhujeme a realizujeme záhrady, parky a verejné priestory. Ponúkame aj pravidelnú údržbu zelene a dodávku kvalitných rastlín.",
-    },
-    {
-        companyTitle: "Zelená záhrada",
-        ico: "87654321",
-        address: "Kvetná 45",
-        city: "Košice",
-        country: "Slovensko",
-        advertisementText: "Profesionálne záhradnícke služby a krajinná architektúra. Návrhujeme a realizujeme záhrady, parky a verejné priestory. Ponúkame aj pravidelnú údržbu zelene a dodávku kvalitných rastlín.",
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
+    },    {
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
+    },    {
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
+    },    {
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
+    },    {
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
+    },    {
+        company: {
+            name: "TechSolutions Slovakia s.r.o.",
+            ico: "12345678",
+            street: "Hlavná ulica",
+            building_number: '123',
+            postal_code: "08001",
+            city: "Bratislava",
+            country: "Slovensko",
+            logo_url: null,
+        },
+        text: "Poskytujeme komplexné IT riešenia pre malé a stredné podniky. Špecializujeme sa na vývoj webových aplikácií, mobilných aplikácií a cloudové služby. Naši odborníci majú viac ako 10 rokov skúseností v oblasti informačných technológií.",
     },
 ];
 
 
 const AdvertSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
-    const [advertisementData, setAdvertisementData] = useState<Advertisement>(null) // pridat company
+    // const [advertisementData, setAdvertisementData] = useState<Advertisement>(null) // pridat company
 
     const handleEdit = () => {
         console.log("editing")
@@ -91,7 +125,7 @@ const AdvertSection = () => {
                 </button>
             </div>
             <div className="px-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
-                {sampleAdvertisements.map((ad, index) => (
+                {sampleAdvertisementsCard.map((ad, index) => (
                     <AdvertisementCard
                         key={index}
                         advertisement={ad}
@@ -109,11 +143,10 @@ const AdvertSection = () => {
                     <SearchBar
                         searchId='search-company'
                         placeholder={"Search Company"}
-                        onCompanySelect={(company) => setAdvertisementData(company)}
+                        onCompanySelect={(company) => console.log(company)}
                     />
                     <AdvertisementForm
                      onSubmit={() => console.log("submiting")}
-                     initialData={}
                     />
                 </div>
             </Modal>

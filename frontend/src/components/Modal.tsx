@@ -1,13 +1,6 @@
 import { X } from "lucide-react";
 import React from "react";
-
-interface ModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    title: string;
-    isEditing?: boolean;
-    children: React.ReactNode;
-}
+import type {ModalProps} from "../types/props/types.ts";
 
 export function Modal({ isOpen, onClose, title, isEditing = false, children }: ModalProps) {
     if (!isOpen) return null;
