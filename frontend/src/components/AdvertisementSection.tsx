@@ -73,9 +73,8 @@ const AdvertisementSection = () => {
         };
     };
 
-    const handleSubmit = async (formData: AdvertisementCardModel) => {
-        // add data
 
+    const addAdvertisement = async (formData: AdvertisementCardModel) => {
         try {
             // TODO: for now
             const serverUrl: string = "http://localhost:8000";
@@ -108,6 +107,11 @@ const AdvertisementSection = () => {
         } catch (error) {
             console.error('Error fetching companies:', error);
         }
+    }
+
+    const handleSubmit = async (formData: AdvertisementCardModel) => {
+        await addAdvertisement(formData)
+
     }
 
     return (
