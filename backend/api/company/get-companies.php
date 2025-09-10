@@ -1,9 +1,9 @@
 <?php
 include_once '../../config/cors.php';
 include_once '../../config/Database.php';
-include_once '../../Company/Process/GetCompaniesByIcoOrName.php';
+include_once '../../Company/Repository/CompanyRepository.php';
 
-use Company\Process\GetCompaniesByIcoOrName;
+use Company\Repository\CompanyRepository;
 use config\Database;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -42,9 +42,9 @@ try {
     }
 
     $database = new Database();
-    $companySearch = new GetCompaniesByIcoOrName($database);
+    $companyRepository = new CompanyRepository($database);
 
-    $companies = $companySearch->get($query, $limit);
+    $companies = $companyRepository->getByNameOrIco($query, $limit);
 
     http_response_code(200);
     echo json_encode([
