@@ -1,34 +1,9 @@
 import React, {useEffect, useState} from "react";
 import {Building2, ChevronDown, Search} from "lucide-react";
+import {Company} from '../types/model/types.ts'
+import {ApiGetResponse} from '../types/api/types.ts'
+import {SearchBarProps} from '../types/props/types.ts'
 
-interface SearchBarProps {
-    searchId: string;
-    placeholder?: string;
-    style?: React.CSSProperties;
-}
-
-interface Company {
-    name: string;
-    ico: string;
-    formatedAddress?: string | null;
-    street?: string;
-    building_number?: string;
-    postal_code?: string;
-    city?: string;
-    country?: string;
-    score?: string;
-}
-
-interface ApiResponse {
-    success: boolean;
-    message: string;
-    data: {
-        query: string;
-        limit: number;
-        count: number;
-        companies: Company[];
-    };
-}
 
 export function SearchBar(
     {
@@ -42,9 +17,12 @@ export function SearchBar(
     const [, setSelectedCompany] = useState<Company | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
+
+    // TODO: pridat fetch niekde do vlastneho priecinka
     const fetchCompanies = async (query: string) => {
         try {
             // TODO: for now
+            const serverUrl: string = "http://localhost:8000";
 
 
             if (!serverUrl) {
@@ -62,7 +40,7 @@ export function SearchBar(
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data: ApiResponse = await response.json();
+            const data: ApiGetResponse = await response.json();
             console.log('Companies data:', data);
             console.log('Search query:', query);
 
@@ -107,8 +85,8 @@ export function SearchBar(
 
     const handleCompanySelect = (company: Company) => {
         setSelectedCompany(company);
-        setSearchQuery(company.name);
         setIsOpen(false);
+        setSearchQuery('');
         setCompanies([]);
 
         if (onCompanySelect) {
@@ -123,7 +101,7 @@ export function SearchBar(
     };
 
     return (
-        <div className="relative w-full max-w-md">
+        <div className="relative w-[50vw] mx-auto mb-10">
             <p className="text-left text-xl mb-3">Search Company</p>
             <div className="relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-5 h-5"/>

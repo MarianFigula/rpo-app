@@ -1,11 +1,12 @@
 import {PlusIcon} from "lucide-react";
-import AdvertisementCard, {AdvertisementData} from "./AdvertisementCard.tsx";
+import AdvertisementCard from "./AdvertisementCard.tsx";
 import {Modal} from "./Modal.tsx";
 import {useState} from "react";
 import SearchBar from "./SearchBar.tsx";
 import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
+import type {Advertisement} from "../types/model/types.ts";
 
-const sampleAdvertisements: AdvertisementData[] = [
+const sampleAdvertisements: Advertisement[] = [
     {
         companyTitle: "TechSolutions Slovakia s.r.o.",
         ico: "12345678",
@@ -48,8 +49,11 @@ const sampleAdvertisements: AdvertisementData[] = [
     },
 ];
 
+
 const AdvertSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [advertisementData, setAdvertisementData] = useState<Advertisement>(null) // pridat company
+
     const handleEdit = () => {
         console.log("editing")
     };
@@ -102,9 +106,15 @@ const AdvertSection = () => {
                 title="Advertisement"
             >
                 <div className="space-y-4">
-                    <SearchBar searchId='search-company' placeholder={"Search Company"}/>
+                    <SearchBar
+                        searchId='search-company'
+                        placeholder={"Search Company"}
+                        onCompanySelect={(company) => setAdvertisementData(company)}
+                    />
                     <AdvertisementForm
-                     onSubmit={() => console.log("submiting")}/>
+                     onSubmit={() => console.log("submiting")}
+                     initialData={}
+                    />
                 </div>
             </Modal>
         </>

@@ -1,23 +1,6 @@
 import {Building2, Edit, MapPin, Trash2} from "lucide-react";
 import companyLogoPlaceholder from "../assets/company-logo-placeholder.png";
-
-
-export interface AdvertisementData {
-    companyLogo?: string;
-    companyTitle: string;
-    ico: string;
-    address: string;
-    city: string;
-    country: string;
-    advertisementText: string;
-}
-
-interface AdvertisementCardProps {
-    advertisement: AdvertisementData;
-    onEdit: () => void;
-    onRemove: () => void;
-    onDownload: () => void;
-}
+import type {AdvertisementCardProps} from "../types/props/types.ts";
 
 const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: AdvertisementCardProps) => {
 
