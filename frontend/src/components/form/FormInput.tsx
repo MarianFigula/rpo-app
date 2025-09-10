@@ -24,17 +24,25 @@ export function FormInput(
     }: FormInputProps) {
     const id = `form-input-${label.toLowerCase()}`;
 
+    const baseInputClasses =
+        "w-[50vw] p-2.5 border border-gray-300 rounded-lg box-border " +
+        "focus:outline-none focus:ring-2 focus:ring-blue-500 " +
+        (type === "file"
+            ? "file:cursor-pointer file:rounded file:border-0 file:bg-gray-200 file:px-2 file:py-1 file:transition file:duration-300 hover:file:bg-gray-400 hover:file:text-white"
+            : "") +
+        (type === "textarea" ? " resize-y" : "");
+
     return (
-        <div>
-            <label htmlFor={id} className="label mb-0-25">
+        <div className="mb-5 w-[50vw] mx-auto">
+            <label htmlFor={id} className="block mb-1 font-medium text-gray-700 text-left">
                 {label}
             </label>
-            {type === 'select' ? (
+            {type === "select" ? (
                 <select
                     id={id}
                     value={value}
                     onChange={onChange}
-                    className="input"
+                    className={`${baseInputClasses}`}
                     required={required}
                     {...props}
                 >
@@ -50,7 +58,7 @@ export function FormInput(
                     id={id}
                     value={value}
                     onChange={onChange}
-                    className="input"
+                    className={`${baseInputClasses}`}
                     required={required}
                     {...props}
                 />
@@ -60,7 +68,7 @@ export function FormInput(
                     type={type}
                     value={value}
                     onChange={onChange}
-                    className="input"
+                    className={`${baseInputClasses}`}
                     required={required}
                     {...props}
                 />
