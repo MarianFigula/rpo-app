@@ -96,4 +96,29 @@ class AdvertisementRepository
 
     }
 
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
+    public function updateAdvertisementById($data) : bool
+    {
+        if (empty($data) || !isset($data['id'])){
+            return false;
+        }
+
+        $query = "UPDATE advertisement SET text = ? WHERE id = ?";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            return $stmt->execute([
+                $data['text'],
+                (int)$data['id']
+            ]);
+
+        }catch (PDOException $e) {
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+    }
 }
