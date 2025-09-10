@@ -87,7 +87,7 @@ class AdvertisementRepository
             $stmt = $this->conn->prepare($query);
             return $stmt->execute([
                 $id,
-                $data['text'],
+                $text,
             ]);
 
         }catch (PDOException $e){
