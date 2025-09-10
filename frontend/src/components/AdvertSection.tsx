@@ -2,6 +2,8 @@ import {PlusIcon} from "lucide-react";
 import AdvertisementCard, {AdvertisementData} from "./AdvertisementCard.tsx";
 import {Modal} from "./Modal.tsx";
 import {useState} from "react";
+import SearchBar from "./SearchBar.tsx";
+import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
 
 const sampleAdvertisements: AdvertisementData[] = [
     {
@@ -64,6 +66,10 @@ const AdvertSection = () => {
         setIsModalOpen(false);
     };
 
+    const handleDownload = () => {
+        console.log("downloading")
+    }
+
     return (
         <>
             <div className="mb-8 text-center flex-col justify-center">
@@ -80,23 +86,25 @@ const AdvertSection = () => {
                     <PlusIcon className="w-5 h-5"/> Pridať inzerát
                 </button>
             </div>
-            <div className="px-6 md:px-20 grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
+            <div className="px-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
                 {sampleAdvertisements.map((ad, index) => (
                     <AdvertisementCard
                         key={index}
                         advertisement={ad}
                         onEdit={handleEdit}
                         onRemove={handleRemove}
-                    />
+                        onDownload={handleDownload}/>
                 ))}
             </div>
             <Modal
                 isOpen={isModalOpen}
                 onClose={closeModal}
-                title="Nový inzerát"
+                title="Advertisement"
             >
                 <div className="space-y-4">
-                    <p className="text-gray-600">form</p>
+                    <SearchBar searchId='search-company' placeholder={"Search Company"}/>
+                    <AdvertisementForm
+                     onSubmit={() => console.log("submiting")}/>
                 </div>
             </Modal>
         </>
