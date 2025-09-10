@@ -16,7 +16,10 @@ class AdvertisementRepository
         $this->conn = $database->getConnection();
     }
 
-
+    /**
+     * @return array
+     * @throws Exception
+     */
     public function getAdvertisements(): array
     {
         $query = "SELECT
@@ -68,6 +71,11 @@ class AdvertisementRepository
         }
     }
 
+    /**
+     * @param $data
+     * @return bool
+     * @throws Exception
+     */
     public function addAdvertisement($data): bool
     {
         if (empty($data)){
