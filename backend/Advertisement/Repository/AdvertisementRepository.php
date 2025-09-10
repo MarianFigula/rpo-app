@@ -16,6 +16,58 @@ class AdvertisementRepository
         $this->conn = $database->getConnection();
     }
 
+
+    public function getAdvertisements(): array
+    {
+        $query = "SELECT
+            c.id as company_id,
+            c.name,
+            c.ico,
+            c.street,
+            c.building_number,
+            c.postal_code,
+            c.city,
+            c.country,
+            c.logo_url,
+            a.id as advertisement_id,
+            a.text,
+            a.created_at
+            FROM company c JOIN advertisement a ON c.id = a.company_id
+            ORDER BY a.created_at DESC";
+
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $stmt->execute();
+
+            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+            $ads = [];
+            foreach ($rows as $row) {
+                $ads[] = [
+                    "id" => $row["advertisement_id"],
+                    "text" => $row["text"],
+                    "created_at" => $row["created_at"],
+                    "company" => [
+                        "id" => $row["company_id"],
+                        "name" => $row["name"],
+                        "ico" => $row["ico"],
+                        "street" => $row["street"],
+                        "building_number" => $row["building_number"],
+                        "postal_code" => $row["postal_code"],
+                        "city" => $row["city"],
+                        "country" => $row["country"],
+                        "logo_url" => $row["logo_url"],
+                    ]
+                ];
+            }
+
+            return $ads;
+        } catch (PDOException $e) {
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+    }
+
     public function addAdvertisement($data): bool
     {
         if (empty($data)){
