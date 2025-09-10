@@ -2,25 +2,23 @@ import React, {useState, useEffect} from "react";
 import {Form} from "./Form";
 import {FormInput} from "./FormInput";
 import type {AdvertisementFormProps} from "../../types/props/types.ts";
+import type {AdvertisementCardModel} from "../../types/model/types.ts";
 
-export interface AdvertisementData {
-    companyTitle: string;
-    ico: string;
-    address: string;
-    buildingNumber: "",
-    city: string;
-    country: string;
-    text: string;
-}
-
-const emptyAdvertisement: AdvertisementData = {
-    companyTitle: "",
-    ico: "",
-    address: "",
-    buildingNumber: "",
-    city: "",
-    country: "",
+const emptyAdvertisement: AdvertisementCardModel = {
+    id: "",
+    company: {
+        id: "",
+        name: "",
+        ico: "",
+        street: "",
+        building_number: "",
+        postal_code: "",
+        city: "",
+        logo_url: "",
+        country: "",
+    },
     text: "",
+    created_at: "",
 };
 
 export function AdvertisementForm(
@@ -29,7 +27,7 @@ export function AdvertisementForm(
         onSubmit,
         isEditing = false
     }: AdvertisementFormProps) {
-    const [formData, setFormData] = useState<AdvertisementData>(initialData || emptyAdvertisement);
+    const [formData, setFormData] = useState<AdvertisementCardModel>(initialData || emptyAdvertisement);
     const [error, setError] = useState<string>("");
 
     useEffect(() => {
@@ -37,38 +35,64 @@ export function AdvertisementForm(
 
     }, [initialData]);
 
-    const handleInputChange = (field: keyof AdvertisementData) => (
+    const handleInputChange = (field: keyof AdvertisementCardModel | string) => (
         event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>
     ) => {
-        setFormData(prev => ({
-            ...prev,
-            [field]: event.target.value
-        }));
+        const value = event.target.value;
+
+        if (field === 'text') {
+            setFormData(prev => ({
+                ...prev,
+                text: value
+            }));
+        } else {
+            const companyField = field as keyof typeof formData.company;
+            setFormData(prev => ({
+                ...prev,
+                company: {
+                    ...prev.company,
+                    [companyField]: value
+                }
+            }));
+        }
     };
+
+
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
-        // Basic validation
-        if (!formData.companyTitle.trim()) {
-            setError("Názov spoločnosti je povinný");
+        if (!formData.company.name.trim()) {
+            setError("Name is required");
             return;
         }
-        if (!formData.ico.trim()) {
-            setError("IČO je povinné");
+        if (!formData.company.ico.trim()) {
+            setError("IČO is required");
             return;
         }
-        if (!formData.address.trim()) {
-            setError("Adresa je povinná");
+        if (!formData.company.street.trim()) {
+            setError("Street is required");
             return;
         }
-        if (!formData.city.trim()) {
-            setError("Mesto je povinné");
+        if (!formData.company.building_number.trim()) {
+            setError("Building number is required");
+            return;
+        }
+        if (!formData.company.postal_code.trim()) {
+            setError("Postal code is required");
+            return;
+        }
+        if (!formData.company.city.trim()) {
+            setError("City is required");
+            return;
+        }
+        if (!formData.company.country.trim()) {
+            setError("Country is required");
             return;
         }
         if (!formData.text.trim()) {
-            setError("Text inzerátu je povinný");
+            setError("Text is required");
             return;
         }
 
@@ -84,39 +108,48 @@ export function AdvertisementForm(
         >
             <div className="space-y-4">
                 <FormInput
-                    label="Firma"
-                    value={formData.companyTitle}
-                    onChange={handleInputChange('companyTitle')}
+                    label="Company name"
+                    value={formData.company.name}
+                    onChange={handleInputChange('name')}
                     required
-                    placeholder="Zadajte názov firmy"
+                    placeholder="Company name"
                 />
 
                 <FormInput
-                    label="IČO"
-                    value={formData.ico}
+                    label="ICO"
+                    value={formData.company.ico}
                     onChange={handleInputChange('ico')}
                     required
                     placeholder="12345678"
                 />
 
                 <FormInput
-                    label="Address"
-                    value={formData.address}
-                    onChange={handleInputChange('address')}
+                    label="Street Name"
+                    value={formData.company.street}
+                    onChange={handleInputChange('street')}
                     required
-                    placeholder="Street"
+                    placeholder="Street name"
                 />
+
                 <FormInput
-                    label="Building number"
-                    value={formData.address}
-                    onChange={handleInputChange('buildingNumber')}
+                    label="Building Number"
+                    value={formData.company.building_number}
+                    onChange={handleInputChange('building_number')}
                     required
                     placeholder="123"
                 />
 
                 <FormInput
+                    label="Postal Code"
+                    value={formData.company.postal_code}
+                    onChange={handleInputChange('postal_code')}
+                    required
+                    placeholder="12345"
+                />
+
+                <FormInput
                     label="City"
-                    value={formData.city}
+                    value={formData.company.city}
                     onChange={handleInputChange('city')}
                     required
                     placeholder="Bratislava"
@@ -124,20 +157,28 @@ export function AdvertisementForm(
 
                 <FormInput
                     label="Country"
-                    value={formData.country}
+                    value={formData.company.country}
                     onChange={handleInputChange('country')}
-                    placeholder='Slovakia'
+                    placeholder="Slovakia"
                     required
                 />
 
                 <FormInput
-                    label="Advertisement text"
+                    label="Text"
                     type="textarea"
                     value={formData.text}
                     onChange={handleInputChange('text')}
                     required
-                    placeholder=""
+                    placeholder="Start typing..."
                     rows={8}
+                />
+
+                <FormInput
+                    label="Logo"
+                    type="file"
+                    value={formData.company.logo_url as string}
+                    onChange={handleInputChange('logo_url')}
+                    required={false}
                 />
             </div>
         </Form>
