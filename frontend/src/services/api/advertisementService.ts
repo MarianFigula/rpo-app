@@ -1,5 +1,6 @@
 import type {AdvertisementCardModel} from "../../types/model/types.ts";
 import type {ApiGeneralResponse} from "../../types/api/types.ts";
+import {createPdfFromBlob} from "../../utils/utils.ts";
 
 const SERVER_API_URL = import.meta.env.VITE_API_URL + '/api' || "http://localhost:8000/api"
 
@@ -134,5 +135,35 @@ export const removeAdvertisement = async (advertisement: AdvertisementCardModel)
 
     } catch (error) {
         throw new Error(`Error ${error}`);
+    }
+}
+
+export const downloadAdvertisement = async (advertisement: AdvertisementCardModel) => {
+    try {
+        const response = await fetch(`${SERVER_API_URL}/advertisement/download-advertisement.php`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(advertisement)
+        });
+
+        if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+        }
+
+        const contentType = response.headers.get('content-type');
+
+        if (contentType && contentType.includes('application/pdf')) {
+            const blob: Blob = await response.blob();
+            const pdfName = `advertisement_${new Date().toISOString().slice(0, 19).replace(/:/g, '-')}`
+            createPdfFromBlob(blob, pdfName)
+        } else {
+            const data = await response.json();
+            throw new Error(data.message || 'Unknown error occurred');
+        }
+
+    } catch (error) {
+        throw new Error(`Error: ${error}`);
     }
 }

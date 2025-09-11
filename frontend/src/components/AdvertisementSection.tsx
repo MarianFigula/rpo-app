@@ -6,7 +6,7 @@ import SearchBar from "./SearchBar.tsx";
 import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
 import AdvertisementCard from "./AdvertisementCard.tsx";
 import {
-    createAdvertisement,
+    createAdvertisement, downloadAdvertisement,
     getAdvertisements,
     removeAdvertisement,
     updateAdvertisement
@@ -69,10 +69,9 @@ const AdvertisementSection = () => {
         setIsEditing(false);
     };
 
-    const handleDownload = () => {
-        console.log("downloading")
+    const handleDownload = async (advertisement: AdvertisementCardModel) => {
+        await downloadAdvertisement(advertisement)
     }
-
     const getInitialFormData = (): AdvertisementCardModel | undefined => {
         if (isEditing && editingAdvertisement) {
             return editingAdvertisement;
@@ -140,7 +139,7 @@ const AdvertisementSection = () => {
                         advertisement={ad}
                         onEdit={() => handleEdit(ad)}
                         onRemove={() => handleRemove(ad)}
-                        onDownload={handleDownload}/>
+                        onDownload={() => handleDownload(ad)}/>
                 ))}
             </div>
             <Modal
