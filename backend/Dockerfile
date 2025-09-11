@@ -20,6 +20,10 @@ WORKDIR /var/www/html/
 
 COPY . /var/www/html/
 
+RUN mkdir -p /var/www/html/public/logos && \
+    chmod -R 777 /var/www/html/public/logos && \
+    chown -R www-data:www-data /var/www/html/public/logos
+
 RUN composer install
 
 EXPOSE 80
