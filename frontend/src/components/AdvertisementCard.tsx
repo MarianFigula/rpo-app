@@ -1,6 +1,7 @@
 import {Building2, Edit, MapPin, Trash2} from "lucide-react";
-import companyLogoPlaceholder from "../assets/company-logo-placeholder.png";
+
 import type {AdvertisementCardProps} from "../types/props/types.ts";
+import {getImageUrl} from "../utils/utils.ts";
 
 const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: AdvertisementCardProps) => {
 
@@ -12,7 +13,7 @@ const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: Adve
             <div className="flex items-start gap-4 mb-6">
                 <div className="relative flex-shrink-0">
                     <img
-                        src={advertisement.company.logo_url || (companyLogoPlaceholder as string)}
+                        src={getImageUrl(advertisement.company.logo_url)}
                         alt={`${advertisement.company.name}-logo`}
                         className="w-20 h-20 rounded-xl object-cover border border-gray-200"
                     />
