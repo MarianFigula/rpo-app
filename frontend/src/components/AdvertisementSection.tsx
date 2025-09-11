@@ -11,6 +11,8 @@ import {
     removeAdvertisement,
     updateAdvertisement
 } from "../services/api/advertisementService.ts";
+import { Toast } from "./toast/Toast.tsx";
+import {useToast} from "./toast/useToast.ts";
 
 
 const AdvertisementSection = () => {
@@ -19,6 +21,7 @@ const AdvertisementSection = () => {
     const [advertisements, setAdvertisements] = useState<AdvertisementCardModel[] | null>(null);
     const [editingAdvertisement, setEditingAdvertisement] = useState<AdvertisementCardModel | null>(null);
     const [isEditing, setIsEditing] = useState(false);
+    const { toast, showSuccess, showError, hideToast } = useToast();
 
     const fetchAdvertisements = async () => {
         try {
@@ -26,8 +29,8 @@ const AdvertisementSection = () => {
             const advertisements = response.data.advertisements
 
             setAdvertisements(advertisements);
-        } catch (error) {
-            console.log(error);
+        } catch {
+            showError("Could not load advertisements")
         }
     }
 
@@ -36,9 +39,6 @@ const AdvertisementSection = () => {
     }, []);
 
     const handleEdit = (advertisement: AdvertisementCardModel) => {
-        console.log("editing advertisement")
-        console.log(advertisement)
-
         setEditingAdvertisement(advertisement);
         setSelectedCompany(advertisement.company);
         setIsEditing(true);
@@ -46,12 +46,24 @@ const AdvertisementSection = () => {
     };
 
     const handleRemove = async (advertisement: AdvertisementCardModel) => {
-        console.log(advertisement)
+        const confirmed = window.confirm(
+            "Are you sure you want to remove the advertisement?"
+        );
+
+        if (!confirmed) return;
+
         try {
-            await removeAdvertisement(advertisement)
+            const response = await removeAdvertisement(advertisement)
+            console.log(response)
+            if (response.success) {
+                showSuccess(response.message || 'Advertisement removed successfully');
+            } else {
+                showError(response.message || 'Failed to remove advertisement');
+            }
+
             await fetchAdvertisements()
-        } catch (error) {
-            console.log(error);
+        } catch {
+            showError('Failed to remove advertisement');
         }
     };
 
@@ -91,19 +103,33 @@ const AdvertisementSection = () => {
 
     const addAdvertisement = async (advertisementCardModel: AdvertisementCardModel, logoFile?: File) => {
         try {
-            await createAdvertisement(advertisementCardModel, logoFile);
+            const response = await createAdvertisement(advertisementCardModel, logoFile);
+
+            if (response.success) {
+                showSuccess(response.message || 'Advertisement was add successfully');
+            } else {
+                showError(response.message || 'Failed to add advertisement');
+            }
+
             await fetchAdvertisements();
-        } catch (error) {
-            console.error('Error adding advertisement:', error);
+        } catch {
+            showError('Failed to add advertisement');
         }
     };
 
     const editAdvertisement = async (formData: AdvertisementCardModel) => {
         try {
-            await updateAdvertisement(formData)
+            const response = await updateAdvertisement(formData)
+
+            if (response.success) {
+                showSuccess(response.message || 'Advertisement was edited successfully');
+            } else {
+                showError(response.message || 'Failed to edit advertisement');
+            }
+
             await fetchAdvertisements();
-        } catch (error) {
-            console.error('Error updating advertisement:', error);
+        } catch {
+            showError('Failed to edit advertisement');
         }
     }
 
@@ -163,6 +189,12 @@ const AdvertisementSection = () => {
                     />
                 </div>
             </Modal>
+            <Toast
+                message={toast.message}
+                type={toast.type}
+                isVisible={toast.isVisible}
+                onClose={hideToast}
+            />
         </>
 
     )

@@ -35,10 +35,6 @@ export const createAdvertisement = async (advertisementCardModel: AdvertisementC
 
         const data: ApiGeneralResponse = await response.json();
 
-        if (!data.success) {
-            throw new Error(`${data.message}`);
-        }
-
         return data
 
     } catch (error) {
@@ -60,13 +56,7 @@ export const getAdvertisements = async () => {
             throw new Error(`Something failed`);
         }
 
-        const data = await response.json();
-
-        // todo: mozno vraciat data a checkovat potom ci to je false uvidim
-        if (!data.success){
-            throw new Error(`${data.message}`);
-        }
-        return data
+        return await response.json()
 
     } catch (error) {
         throw new Error(`Error ${error}`);
@@ -95,9 +85,6 @@ export const updateAdvertisement = async (formData: AdvertisementCardModel) => {
 
         const data: ApiGeneralResponse = await response.json();
 
-        if (!data.success){
-            throw new Error(`${data.message}`);
-        }
         return data
 
     } catch (error) {
@@ -126,10 +113,6 @@ export const removeAdvertisement = async (advertisement: AdvertisementCardModel)
         }
 
         const data: ApiGeneralResponse = await response.json();
-
-        if (!data.success) {
-            throw new Error(`${data.message}`);
-        }
 
         return data
 

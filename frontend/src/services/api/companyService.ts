@@ -14,10 +14,6 @@ export const getCompanies = async (query: string) => {
 
         const data: ApiGetCompaniesResponse = await response.json();
 
-        if (!data.success){
-            throw new Error(`${data.message}`);
-        }
-
         return data
 
     } catch (error) {
