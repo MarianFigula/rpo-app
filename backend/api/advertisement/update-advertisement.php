@@ -19,7 +19,6 @@ if ($method !== "PUT") {
     exit();
 }
 
-
 try {
     $rawInput = file_get_contents("php://input");
     $data = json_decode($rawInput, true);

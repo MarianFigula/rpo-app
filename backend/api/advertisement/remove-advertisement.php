@@ -18,7 +18,6 @@ if ($method !== "DELETE") {
     exit();
 }
 
-
 try {
 
     $rawInput = file_get_contents("php://input");

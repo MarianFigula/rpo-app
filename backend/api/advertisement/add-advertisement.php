@@ -19,9 +19,7 @@ if ($method !== "POST") {
     exit();
 }
 
-
 try {
-
 
     $requiredFields = [
         "company_id", "text", "company_name", "company_ico",
@@ -39,7 +37,6 @@ try {
             exit();
         }
     }
-
 
     if (isset($_FILES['logo'])) {
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
