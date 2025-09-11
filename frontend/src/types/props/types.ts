@@ -25,6 +25,6 @@ export interface ModalProps {
 
 export interface AdvertisementFormProps {
     initialData?: AdvertisementCardModel;
-    onSubmit: (data: AdvertisementCardModel) => void;
+    onSubmit: (data: AdvertisementCardModel, logoFile?: File) => void;
     isEditing?: boolean;
 }
