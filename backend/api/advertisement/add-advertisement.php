@@ -2,8 +2,10 @@
 include_once '../../config/cors.php';
 include_once '../../config/Database.php';
 include_once '../../Advertisement/Repository/AdvertisementRepository.php';
+include_once '../../Company/Repository/CompanyRepository.php';
 
 use Advertisement\Repository\AdvertisementRepository;
+use Company\Repository\CompanyRepository;
 use config\Database;
 
 $method = $_SERVER['REQUEST_METHOD'];
@@ -20,31 +22,106 @@ if ($method !== "POST") {
 
 try {
 
-    $rawInput = file_get_contents("php://input");
-    $data = json_decode($rawInput, true);
 
-    if (!isset($data["company_id"]) || !isset($data["text"])) {
-        http_response_code(400);
-        echo json_encode([
-            "success" => false,
-            "message" => "The required fields are missing"
-        ]);
+    $requiredFields = [
+        "company_id", "text", "company_name", "company_ico",
+        "company_street", "company_building_number", "company_postal_code",
+        "company_city", "company_country"
+    ];
+
+    foreach ($requiredFields as $field) {
+        if (!isset($_POST[$field])) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false,
+                "message" => "The required field '$field' is missing"
+            ]);
+            exit();
+        }
+    }
+
+
+    if (isset($_FILES['logo'])) {
+        $targetDir = '../../public/logos/';
+
+        $fileExtension = strtolower(pathinfo($_FILES["logo"]["name"], PATHINFO_EXTENSION));
+
+        $uniqueFilename = time() . '_' . rand(1000, 9999) . '.' . $fileExtension;
+
+        $targetFile = $targetDir . $uniqueFilename;
+        $img_url = "/logos/" . $uniqueFilename;
+
+        if (!move_uploaded_file($_FILES["logo"]["tmp_name"], $targetFile)) {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "Failed to upload image."
+            ]);
+            exit();
+        }
     }
 
     $database = new Database();
     $advertisementRepository = new AdvertisementRepository($database);
+    $companyRepository = new CompanyRepository($database);
 
 
-    $isAdvertisementAdded = $advertisementRepository->addAdvertisement($data);
+    $companyData = [
+        "company_name" => $_POST["company_name"],
+        "company_ico" => $_POST["company_ico"],
+        "company_street" => $_POST["company_street"],
+        "company_building_number" => $_POST["company_building_number"],
+        "company_postal_code" => $_POST["company_postal_code"],
+        "company_city" => $_POST["company_city"],
+        "company_country" => $_POST["company_country"],
+        "company_logo_url" => $img_url ?? null
+    ];
 
-//    var_dump($isAdvertisementAdded);
+    $company_id = trim($_POST['company_id']);
+    $isNewCompany = empty($company_id);
+
+    if ($isNewCompany) {
+        $company_id = $companyRepository->addCompany($companyData);
+
+        if ($company_id === false) {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "An error occurred when adding new company"
+            ]);
+            exit();
+        }
+
+        $company_id = (int) $company_id;
+    } else {
+        $company_id = (int) $company_id;
+        $companyData['company_id'] = $company_id;
+
+        $isCompanyUpdated = $companyRepository->updateCompanyById($companyData);
+        if (!$isCompanyUpdated) {
+            http_response_code(500);
+            echo json_encode([
+                "success" => false,
+                "message" => "An error occurred when updating company"
+            ]);
+            exit();
+        }
+    }
+
+    $advertisementData = [
+        'company_id' => $company_id,
+        'text' => $_POST["text"]
+    ];
+
+    $isAdvertisementAdded = $advertisementRepository->addAdvertisement($advertisementData);
+
     if (!$isAdvertisementAdded) {
         http_response_code(500);
         echo json_encode([
             "success" => false,
-            "message" => "An error occurred please try again"
+            "message" => "An error occurred when adding new advertisement"
         ]);
-        return;
+        exit();
     }
 
 
