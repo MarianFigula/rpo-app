@@ -42,9 +42,34 @@ try {
 
 
     if (isset($_FILES['logo'])) {
-        $targetDir = '../../public/logos/';
+        $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
+        $allowedExtensions = ['jpg', 'jpeg', 'png'];
+        $maxFileSize = 5 * 1024 * 1024;
 
+        $fileType = $_FILES['logo']['type'];
+        $fileSize = $_FILES['logo']['size'];
         $fileExtension = strtolower(pathinfo($_FILES["logo"]["name"], PATHINFO_EXTENSION));
+
+        if ($fileSize > $maxFileSize) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false,
+                "message" => "File size exceeds 5MB limit. Current size: " . round($fileSize / 1024 / 1024, 2) . "MB"
+            ]);
+            exit();
+        }
+
+        if (!in_array($fileExtension, $allowedExtensions) || !in_array($fileType, $allowedTypes)) {
+            http_response_code(400);
+            echo json_encode([
+                "success" => false,
+                "message" => "Invalid file format. Only PNG and JPEG files are allowed."
+            ]);
+            exit();
+        }
+
+
+        $targetDir = '../../public/logos/';
 
         $uniqueFilename = time() . '_' . rand(1000, 9999) . '.' . $fileExtension;
 
