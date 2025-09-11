@@ -10,3 +10,14 @@ export const getImageUrl = (logoUrl: string | null | undefined): string => {
 
     return `${API_BASE_URL}${logoUrl}`;
 };
+
+export const createPdfFromBlob = (blob: Blob, pdfName: string) => {
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${pdfName}.pdf`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+}
