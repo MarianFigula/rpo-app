@@ -3,9 +3,11 @@
 include_once '../../config/cors.php';
 include_once '../../config/Database.php';
 include_once '../../Advertisement/Repository/AdvertisementRepository.php';
+include_once '../../utils/InputSanitizer.php';
 
 use Advertisement\Repository\AdvertisementRepository;
 use config\Database;
+use utils\InputSanitizer;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -31,10 +33,12 @@ try {
         ]);
     }
 
+    $sanitizedData = InputSanitizer::sanitizeArray($data);
+
     $database = new Database();
     $advertisementRepository = new AdvertisementRepository($database);
 
-    $isAdvertisementRemoved = $advertisementRepository->deleteAdvertisementById($data);
+    $isAdvertisementRemoved = $advertisementRepository->deleteAdvertisementById($sanitizedData);
 
     if (!$isAdvertisementRemoved) {
         http_response_code(500);

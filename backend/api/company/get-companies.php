@@ -2,9 +2,11 @@
 include_once '../../config/cors.php';
 include_once '../../config/Database.php';
 include_once '../../Company/Repository/CompanyRepository.php';
+include_once '../../utils/InputSanitizer.php';
 
 use Company\Repository\CompanyRepository;
 use config\Database;
+use utils\InputSanitizer;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -19,10 +21,10 @@ if ($method !== "GET") {
 
 try {
 
-    $query = $_GET['query'] ?? '';
+    $query = InputSanitizer::sanitizeString($_GET['query']);
 
     if (empty($query)) {
-        http_response_code(404);
+        http_response_code(400);
         echo json_encode([
             "success" => false,
             "message" => "Query parameter is required"
