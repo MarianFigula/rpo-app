@@ -1,7 +1,7 @@
 
 import './App.css'
 import Header from "./components/Header.tsx";
-import AdvertSection from "./components/AdvertSection.tsx";
+import AdvertisementSection from "./components/AdvertisementSection.tsx";
 import Footer from "./components/Footer.tsx";
 
 function App() {
@@ -9,7 +9,7 @@ function App() {
   return (
       <div className='min-h-screen'>
           <Header/>
-          <AdvertSection/>
+          <AdvertisementSection/>
           <Footer/>
       </div>
   )
