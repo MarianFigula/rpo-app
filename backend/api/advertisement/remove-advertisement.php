@@ -15,7 +15,7 @@ if ($method !== "DELETE") {
     http_response_code(405);
     echo json_encode([
         "success" => false,
-        "message" => "Method not allowed. Only POST is permitted."
+        "message" => "Method not allowed. Only DELETE is permitted."
     ]);
     exit();
 }
