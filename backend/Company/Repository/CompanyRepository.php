@@ -83,7 +83,7 @@ class CompanyRepository
             MATCH(c.name, c.ico) AGAINST (:query IN BOOLEAN MODE) as score
             FROM company c 
             WHERE MATCH(c.name, c.ico) AGAINST (:query IN BOOLEAN MODE)
-            ORDER BY score DESC 
+            ORDER BY c.name ASC, score DESC
             LIMIT :limit";
 
         try {
