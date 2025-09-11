@@ -14,7 +14,7 @@ if ($method !== "GET") {
     http_response_code(405);
     echo json_encode([
         "success" => false,
-        "message" => "Method not allowed. Only POST is permitted."
+        "message" => "Method not allowed. Only GET is permitted."
     ]);
     exit();
 }
