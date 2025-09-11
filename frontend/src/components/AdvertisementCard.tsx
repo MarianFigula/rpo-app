@@ -1,11 +1,21 @@
-import {Building2, Edit, MapPin, Trash2} from "lucide-react";
+import {Building2, Edit, Loader2, MapPin, Trash2} from "lucide-react";
 
 import type {AdvertisementCardProps} from "../types/props/types.ts";
 import {getImageUrl} from "../utils/utils.ts";
+import {useState} from "react";
 
 const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: AdvertisementCardProps) => {
-
+    const [isDownloading, setIsDownloading] = useState(false);
     const fullAddress = `${advertisement.company.street}, ${advertisement.company.city}, ${advertisement.company.country}`;
+
+    const handleDownload = async () => {
+        setIsDownloading(true);
+        try {
+            await onDownload();
+        } finally {
+            setIsDownloading(false);
+        }
+    };
 
     return (
         <div
@@ -56,10 +66,19 @@ const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: Adve
                     <Trash2 className="w-4 h-4"/> Delete
                 </button>
             </div>
-            <button onClick={onDownload}
-                    className="w-full px-3 py-1.5 rounded-lg border border-indigo-400 text-indigo-600 hover:bg-indigo-50 transition cursor-pointer"
+            <button
+                onClick={handleDownload}
+                disabled={isDownloading}
+                className="w-full px-3 py-1.5 rounded-lg border border-indigo-400 text-indigo-600 hover:bg-indigo-50 transition cursor-pointer disabled:opacity-50 flex items-center justify-center gap-2"
             >
-                Download PDF
+                {isDownloading ? (
+                    <>
+                        <Loader2 className="w-4 h-4 animate-spin"/>
+                        Downloading...
+                    </>
+                ) : (
+                    "Download PDF"
+                )}
             </button>
         </div>
     );
