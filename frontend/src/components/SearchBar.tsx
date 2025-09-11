@@ -1,8 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Building2, ChevronDown, Search} from "lucide-react";
 import {Company} from '../types/model/types.ts'
-import {ApiGetCompaniesResponse} from '../types/api/types.ts'
 import {SearchBarProps} from '../types/props/types.ts'
+import {getCompanies} from "../services/api/companyService.ts";
 
 
 export function SearchBar(
@@ -14,61 +14,34 @@ export function SearchBar(
 
     const [searchQuery, setSearchQuery] = useState<string>("");
     const [companies, setCompanies] = useState<Company[]>([]);
-    const [, setSelectedCompany] = useState<Company | null>(null);
+    // const [, setSelectedCompany] = useState<Company | null>(null);
     const [isOpen, setIsOpen] = useState(false);
 
-
-    // TODO: pridat fetch niekde do vlastneho priecinka
     const fetchCompanies = async (query: string) => {
         try {
-            // TODO: for now
-            const serverUrl: string = "http://localhost:8000";
+            const response = await getCompanies(query)
+            const responseCompanies = response.data.companies
 
-
-            if (!serverUrl) {
-                throw new Error('REACT_APP_SERVER_URL is not defined');
-            }
-
-            const response = await fetch(`${serverUrl}/api/company/get-companies.php?query=${query}`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data: ApiGetCompaniesResponse = await response.json();
-            console.log('Companies data:', data);
-            console.log('Search query:', query);
-
-            if (data.success && data.data.companies) {
-                setCompanies(data.data.companies);
+            if (responseCompanies) {
+                setCompanies(responseCompanies);
                 setIsOpen(true);
             } else {
                 setCompanies([]);
                 setIsOpen(false);
             }
-
-
         } catch (error) {
             console.error('Error fetching companies:', error);
         }
     };
 
-    // useEffect with debouncing
     useEffect(() => {
         const timeoutId = setTimeout(() => {
             if (!searchQuery.trim() || searchQuery.trim().length < 3){
                 setIsOpen(false)
                 return
             }
-
             try {
                 fetchCompanies(searchQuery)
-
             } catch (exception) {
                 console.log(exception)
             }
@@ -80,12 +53,12 @@ export function SearchBar(
 
     const handleFilter = (event: React.ChangeEvent<HTMLInputElement>) => {
         setSearchQuery(event.target.value);
-        setSelectedCompany(null)
+        // setSelectedCompany(null)
     };
 
     const handleCompanySelect = (company: Company) => {
         // todo, treba mi setSelectedCompany vobec ?
-        setSelectedCompany(company);
+        // setSelectedCompany(company);
         setIsOpen(false);
         setSearchQuery('');
         setCompanies([]);
