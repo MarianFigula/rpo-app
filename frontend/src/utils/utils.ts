@@ -21,3 +21,8 @@ export const createPdfFromBlob = (blob: Blob, pdfName: string) => {
     document.body.removeChild(a);
     URL.revokeObjectURL(url);
 }
+
+
+export const isStringLongerThan = (maxLength: number, string: string) => {
+    return string.length > maxLength;
+}

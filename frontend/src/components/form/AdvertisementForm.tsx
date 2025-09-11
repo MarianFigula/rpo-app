@@ -3,6 +3,7 @@ import {Form} from "./Form";
 import {FormInput} from "./FormInput";
 import type {AdvertisementFormProps} from "../../types/props/types.ts";
 import type {AdvertisementCardModel} from "../../types/model/types.ts";
+import {isStringLongerThan} from "../../utils/utils.ts";
 
 const emptyAdvertisement: AdvertisementCardModel = {
     id: "",
@@ -64,40 +65,41 @@ export function AdvertisementForm(
         }
     };
 
+    const validateForm = (): string | null => {
+        const requiredFields = [
+            { value: formData.company.name, name: "Name" },
+            { value: formData.company.ico, name: "ICO" },
+            { value: formData.company.street, name: "Street" },
+            { value: formData.company.building_number, name: "Building number" },
+            { value: formData.company.postal_code, name: "Postal code" },
+            { value: formData.company.city, name: "City" },
+            { value: formData.company.country, name: "Country" },
+            { value: formData.text, name: "Text" }
+        ];
+
+        for (const field of requiredFields) {
+            if (!field.value.trim()) {
+                return `${field.name} is required`;
+            }
+        }
+
+        if (isStringLongerThan(8, formData.company.ico)) {
+            return "IČO must be 8 characters or less";
+        }
+
+        if (isStringLongerThan(5, formData.company.postal_code)) {
+            return "Postal code must be 5 characters or less";
+        }
+
+        return null;
+    };
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setError("");
 
-        if (!formData.company.name.trim()) {
-            setError("Name is required");
-            return;
-        }
-        if (!formData.company.ico.trim()) {
-            setError("IČO is required");
-            return;
-        }
-        if (!formData.company.street.trim()) {
-            setError("Street is required");
-            return;
-        }
-        if (!formData.company.building_number.trim()) {
-            setError("Building number is required");
-            return;
-        }
-        if (!formData.company.postal_code.trim()) {
-            setError("Postal code is required");
-            return;
-        }
-        if (!formData.company.city.trim()) {
-            setError("City is required");
-            return;
-        }
-        if (!formData.company.country.trim()) {
-            setError("Country is required");
-            return;
-        }
-        if (!formData.text.trim()) {
-            setError("Text is required");
+        const validationError = validateForm();
+        if (validationError) {
+            setError(validationError);
             return;
         }
 
