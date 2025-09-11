@@ -18,8 +18,7 @@ const AdvertisementCard = ({ advertisement, onEdit, onRemove, onDownload }: Adve
     };
 
     return (
-        <div
-            className="group animate-fade-up bg-white shadow-md rounded-xl p-6 hover:shadow-lg transition-shadow duration-300">
+        <div className="group animate-fade-up bg-white shadow-md rounded-xl p-4 hover:shadow-lg transition-shadow duration-300 flex flex-col w-full min-w-0">
             <div className="flex items-start gap-4 mb-6">
                 <div className="relative flex-shrink-0">
                     <img
