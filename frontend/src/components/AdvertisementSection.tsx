@@ -5,7 +5,7 @@ import React, {useEffect, useState} from "react";
 import SearchBar from "./SearchBar.tsx";
 import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
 import AdvertisementCard from "./AdvertisementCard.tsx";
-import {ApiPostResponse} from "../types/api/types.ts";
+import {ApiGeneralResponse} from "../types/api/types.ts";
 
 
 const AdvertisementSection = () => {
@@ -28,6 +28,10 @@ const AdvertisementSection = () => {
             }
 
             const data = await response.json();
+
+            if (!data.success){
+                throw new Error(`Success is false ${response.status}`);
+            }
             setAdvertisements(data.data.advertisements)
             console.log('Advertisements data:', data);
 
@@ -44,8 +48,43 @@ const AdvertisementSection = () => {
         console.log("editing")
     };
 
-    const handleRemove = () => {
-        console.log("removing")
+    // to som skoncil
+    const handleRemove = async (advertisemet: AdvertisementCardModel) => {
+        console.log(advertisemet)
+
+        try {
+            // TODO: for now
+            const serverUrl: string = "http://localhost:8000";
+
+            if (!serverUrl) {
+                throw new Error('REACT_APP_SERVER_URL is not defined');
+            }
+
+            const requestData = {
+                id: advertisemet.id
+            };
+
+            const response = await fetch(`${serverUrl}/api/advertisement/remove-advertisement.php`, {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data: ApiGeneralResponse = await response.json();
+            console.log(data)
+            // todo nejak inak skusit spravit
+            location.reload()
+
+
+        } catch (error) {
+            console.error('Error fetching companies:', error);
+        }
     };
 
     const openModal = () => {
@@ -100,9 +139,10 @@ const AdvertisementSection = () => {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data: ApiPostResponse = await response.json();
+            const data: ApiGeneralResponse = await response.json();
             console.log('data', data);
-
+            // todo nejak inak spravit reload
+            // location.reload()
 
         } catch (error) {
             console.error('Error fetching companies:', error);
@@ -118,16 +158,16 @@ const AdvertisementSection = () => {
         <>
             <div className="mb-8 text-center flex-col justify-center">
                 <h1 className="text-3xl font-bold text-foreground mb-2">
-                    Obchodné inzeráty
+                    Advertisement
                 </h1>
                 <p className="text-muted-foreground mb-4">
-                    Prehľad všetkých inzerátov
+                    Overview of all advertisements
                 </p>
                 <button
                     className="flex items-center gap-2 mx-auto bg-emerald-500 text-white px-4 py-1.5 rounded shadow hover:bg-emerald-600 cursor-pointer"
                     onClick={openModal}
                 >
-                    <PlusIcon className="w-5 h-5"/> Pridať inzerát
+                    <PlusIcon className="w-5 h-5"/> Add advertisement
                 </button>
             </div>
             <div className="px-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3 max-w-6xl mx-auto">
@@ -136,7 +176,7 @@ const AdvertisementSection = () => {
                         key={index}
                         advertisement={ad}
                         onEdit={handleEdit}
-                        onRemove={handleRemove}
+                        onRemove={() => handleRemove(ad)}
                         onDownload={handleDownload}/>
                 ))}
             </div>
