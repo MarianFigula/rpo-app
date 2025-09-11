@@ -20,7 +20,7 @@ export function Form(
     return (
         <form onSubmit={onSubmit}>
             {children}
-            {error && <p className="mt-0 text-red-500">{error}</p>}
+            {error && <p className="mt-0 mb-2 text-red-500">{error}</p>}
             <button
                 type="submit"
                 className={`cursor-pointer ${buttonClassName}`}
