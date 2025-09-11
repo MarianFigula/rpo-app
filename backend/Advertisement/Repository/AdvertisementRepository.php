@@ -129,4 +129,25 @@ class AdvertisementRepository
             throw new Exception("Database query failed: " . $e->getMessage());
         }
     }
+
+    public function deleteAdvertisementById($data): bool
+    {
+        if (empty($data) || !isset($data['id'])){
+            return false;
+        }
+
+        $query = "DELETE FROM advertisement WHERE id = ?";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+
+            return $stmt->execute([
+                (int)$data['id']
+            ]);
+
+        }catch (PDOException $e) {
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+
+    }
 }
