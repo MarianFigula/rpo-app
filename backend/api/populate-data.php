@@ -1,5 +1,6 @@
 <?php
 require_once '../config/Database.php';
+require_once '../RPODataPopulator/RPODataPopulator.php';
 
 use config\Database;
 use RPODataPopulator\RPODataPopulator;
