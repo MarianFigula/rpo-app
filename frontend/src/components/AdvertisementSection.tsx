@@ -5,7 +5,12 @@ import React, {useEffect, useState} from "react";
 import SearchBar from "./SearchBar.tsx";
 import {AdvertisementForm} from "./form/AdvertisementForm.tsx";
 import AdvertisementCard from "./AdvertisementCard.tsx";
-import {ApiGeneralResponse} from "../types/api/types.ts";
+import {
+    createAdvertisement,
+    getAdvertisements,
+    removeAdvertisement,
+    updateAdvertisement
+} from "../services/api/advertisementService.ts";
 
 
 const AdvertisementSection = () => {
@@ -16,30 +21,13 @@ const AdvertisementSection = () => {
     const [isEditing, setIsEditing] = useState(false);
 
     const fetchAdvertisements = async () => {
-        const serverUrl = 'http://localhost:8000'
         try {
+            const response = await getAdvertisements();
+            const advertisements = response.data.advertisements
 
-            const response = await fetch(`${serverUrl}/api/advertisement/get-advertisements.php`, {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                }
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data = await response.json();
-
-            if (!data.success){
-                throw new Error(`Success is false ${response.status}`);
-            }
-            setAdvertisements(data.data.advertisements)
-            console.log('Advertisements data:', data);
-
-        } catch (e) {
-            console.log(e)
+            setAdvertisements(advertisements);
+        } catch (error) {
+            console.log(error);
         }
     }
 
@@ -57,41 +45,13 @@ const AdvertisementSection = () => {
         setIsModalOpen(true);
     };
 
-    const handleRemove = async (advertisemet: AdvertisementCardModel) => {
-        console.log(advertisemet)
-
+    const handleRemove = async (advertisement: AdvertisementCardModel) => {
+        console.log(advertisement)
         try {
-            // TODO: for now
-            const serverUrl: string = "http://localhost:8000";
-
-            if (!serverUrl) {
-                throw new Error('REACT_APP_SERVER_URL is not defined');
-            }
-
-            const requestData = {
-                id: advertisemet.id
-            };
-
-            const response = await fetch(`${serverUrl}/api/advertisement/remove-advertisement.php`, {
-                method: 'DELETE',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data: ApiGeneralResponse = await response.json();
-            console.log(data)
-            // todo nejak inak skusit spravit
-            location.reload()
-
-
+            await removeAdvertisement(advertisement)
+            await fetchAdvertisements()
         } catch (error) {
-            console.error('Error fetching companies:', error);
+            console.log(error);
         }
     };
 
@@ -132,79 +92,17 @@ const AdvertisementSection = () => {
 
     const addAdvertisement = async (advertisementCardModel: AdvertisementCardModel, logoFile?: File) => {
         try {
-            // TODO: for now
-            const serverUrl: string = "http://localhost:8000";
-
-            if (!serverUrl) {
-                throw new Error('REACT_APP_SERVER_URL is not defined');
-            }
-
-            const requestFormData = new FormData();
-
-            requestFormData.append('company_id', advertisementCardModel.company.id);
-            requestFormData.append('text', advertisementCardModel.text);
-
-            requestFormData.append('company_name', advertisementCardModel.company.name);
-            requestFormData.append('company_ico', advertisementCardModel.company.ico);
-            requestFormData.append('company_street', advertisementCardModel.company.street);
-            requestFormData.append('company_building_number', advertisementCardModel.company.building_number);
-            requestFormData.append('company_postal_code', advertisementCardModel.company.postal_code);
-            requestFormData.append('company_city', advertisementCardModel.company.city);
-            requestFormData.append('company_country', advertisementCardModel.company.country);
-
-            if (logoFile) {
-                requestFormData.append('logo', logoFile);
-            }
-
-            const response = await fetch(`${serverUrl}/api/advertisement/add-advertisement.php`, {
-                method: 'POST',
-                body: requestFormData
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data: ApiGeneralResponse = await response.json();
-            console.log('data', data);
-            // todo nejak inak spravit reload
-            // location.reload()
-
+            await createAdvertisement(advertisementCardModel, logoFile);
+            await fetchAdvertisements();
         } catch (error) {
             console.error('Error adding advertisement:', error);
         }
-    }
+    };
 
-    const updateAdvertisement = async (formData: AdvertisementCardModel) => {
+    const editAdvertisement = async (formData: AdvertisementCardModel) => {
         try {
-            const serverUrl: string = "http://localhost:8000";
-
-            if (!serverUrl) {
-                throw new Error('REACT_APP_SERVER_URL is not defined');
-            }
-
-            const requestData = {
-                id: formData.id,
-                text: formData.text
-            };
-
-            const response = await fetch(`${serverUrl}/api/advertisement/update-advertisement.php`, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
-            });
-
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
-            }
-
-            const data: ApiGeneralResponse = await response.json();
-            console.log('Updated advertisement:', data);
-            // todo nejak inak spravit reload
-            // location.reload()
-
+            await updateAdvertisement(formData)
+            await fetchAdvertisements();
         } catch (error) {
             console.error('Error updating advertisement:', error);
         }
@@ -212,11 +110,11 @@ const AdvertisementSection = () => {
 
     const handleSubmit = async (formData: AdvertisementCardModel, logoFile?: File) => {
         if (isEditing) {
-            await updateAdvertisement(formData);
+            await editAdvertisement(formData);
         } else {
             await addAdvertisement(formData, logoFile);
         }
-        // closeModal();
+        closeModal();
     }
 
     return (
