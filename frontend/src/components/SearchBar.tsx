@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {Building2, ChevronDown, Search} from "lucide-react";
 import {Company} from '../types/model/types.ts'
-import {ApiGetResponse} from '../types/api/types.ts'
+import {ApiGetCompaniesResponse} from '../types/api/types.ts'
 import {SearchBarProps} from '../types/props/types.ts'
 
 
@@ -40,7 +40,7 @@ export function SearchBar(
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
 
-            const data: ApiGetResponse = await response.json();
+            const data: ApiGetCompaniesResponse = await response.json();
             console.log('Companies data:', data);
             console.log('Search query:', query);
 
@@ -84,6 +84,7 @@ export function SearchBar(
     };
 
     const handleCompanySelect = (company: Company) => {
+        // todo, treba mi setSelectedCompany vobec ?
         setSelectedCompany(company);
         setIsOpen(false);
         setSearchQuery('');

@@ -1,7 +1,7 @@
 import type {Company} from "../model/types.ts";
 
 
-export interface ApiGetResponse {
+export interface ApiGetCompaniesResponse {
     success: boolean;
     message: string;
     data: {
@@ -13,7 +13,7 @@ export interface ApiGetResponse {
 }
 
 
-export interface ApiPostResponse {
+export interface ApiGeneralResponse {
     success: boolean;
     message: string;
 }
