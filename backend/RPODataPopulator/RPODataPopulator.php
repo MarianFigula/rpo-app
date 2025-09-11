@@ -1,7 +1,7 @@
 <?php
-require_once '../config/Database.php';
 
-use config\Database;
+namespace RPODataPopulator;
+
 
 class RPODataPopulator {
     private $conn;
@@ -141,7 +141,7 @@ class RPODataPopulator {
 
             ]);
 
-            echo "Inserted company: {$name} (ICO: {$ico})";
+            echo "Inserted company: {$name} (ICO: {$ico})\n";
             return true;
 
         } catch (Exception $e) {
@@ -150,16 +150,6 @@ class RPODataPopulator {
         }
     }
 
-
-    private function exctractEstablishment($data)
-    {
-        if (isset($data['establishment'])) {
-            return $data['establishment'];
-        }
-
-        return null;
-
-    }
     private function extractCompanyName($data): string | null {
         if (isset($data['fullNames']) && is_array($data['fullNames'])) {
             $currentName = null;
@@ -246,17 +236,4 @@ class RPODataPopulator {
 
         echo "Data population completed!\n";
     }
-}
-
-try {
-
-    echo "hereas";
-    $database = new Database();
-    $db = $database->getConnection();
-
-    $populator = new RPODataPopulator($db);
-    $populator->populateData();
-
-} catch (Exception $e) {
-    echo "Database error: " . $e->getMessage() . "\n";
 }
