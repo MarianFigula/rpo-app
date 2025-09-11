@@ -130,7 +130,7 @@ const AdvertisementSection = () => {
         return undefined;
     };
 
-    const addAdvertisement = async (formData: AdvertisementCardModel) => {
+    const addAdvertisement = async (advertisementCardModel: AdvertisementCardModel, logoFile?: File) => {
         try {
             // TODO: for now
             const serverUrl: string = "http://localhost:8000";
@@ -139,17 +139,26 @@ const AdvertisementSection = () => {
                 throw new Error('REACT_APP_SERVER_URL is not defined');
             }
 
-            const requestData = {
-                company_id: formData.company.id,
-                text: formData.text
-            };
+            const requestFormData = new FormData();
+
+            requestFormData.append('company_id', advertisementCardModel.company.id);
+            requestFormData.append('text', advertisementCardModel.text);
+
+            requestFormData.append('company_name', advertisementCardModel.company.name);
+            requestFormData.append('company_ico', advertisementCardModel.company.ico);
+            requestFormData.append('company_street', advertisementCardModel.company.street);
+            requestFormData.append('company_building_number', advertisementCardModel.company.building_number);
+            requestFormData.append('company_postal_code', advertisementCardModel.company.postal_code);
+            requestFormData.append('company_city', advertisementCardModel.company.city);
+            requestFormData.append('company_country', advertisementCardModel.company.country);
+
+            if (logoFile) {
+                requestFormData.append('logo', logoFile);
+            }
 
             const response = await fetch(`${serverUrl}/api/advertisement/add-advertisement.php`, {
                 method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-                body: JSON.stringify(requestData)
+                body: requestFormData
             });
 
             if (!response.ok) {
@@ -162,7 +171,7 @@ const AdvertisementSection = () => {
             // location.reload()
 
         } catch (error) {
-            console.error('Error fetching companies:', error);
+            console.error('Error adding advertisement:', error);
         }
     }
 
@@ -194,20 +203,20 @@ const AdvertisementSection = () => {
             const data: ApiGeneralResponse = await response.json();
             console.log('Updated advertisement:', data);
             // todo nejak inak spravit reload
-            location.reload()
+            // location.reload()
 
         } catch (error) {
             console.error('Error updating advertisement:', error);
         }
     }
 
-    const handleSubmit = async (formData: AdvertisementCardModel) => {
+    const handleSubmit = async (formData: AdvertisementCardModel, logoFile?: File) => {
         if (isEditing) {
             await updateAdvertisement(formData);
         } else {
-            await addAdvertisement(formData);
+            await addAdvertisement(formData, logoFile);
         }
-        closeModal();
+        // closeModal();
     }
 
     return (

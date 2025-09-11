@@ -26,9 +26,11 @@ export function AdvertisementForm(
         initialData,
         onSubmit,
         isEditing = false
-    }: AdvertisementFormProps) {
+    }: AdvertisementFormProps)
+{
     const [formData, setFormData] = useState<AdvertisementCardModel>(initialData || emptyAdvertisement);
     const [error, setError] = useState<string>("");
+    const [logoFile, setLogoFile] = useState<File | undefined>(undefined);
 
     useEffect(() => {
         setFormData(initialData ? initialData : emptyAdvertisement)
@@ -53,6 +55,12 @@ export function AdvertisementForm(
                     [companyField]: value
                 }
             }));
+        }
+    };
+
+    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (event.target.files && event.target.files.length > 0) {
+            setLogoFile(event.target?.files[0]);
         }
     };
 
@@ -93,7 +101,7 @@ export function AdvertisementForm(
             return;
         }
 
-        onSubmit(formData);
+        onSubmit(formData, logoFile);
     };
 
     return (
@@ -180,9 +188,10 @@ export function AdvertisementForm(
                 <FormInput
                     label="Logo"
                     type="file"
-                    value={formData.company.logo_url as string}
-                    onChange={handleInputChange('logo_url')}
+                    value={""}
+                    onChange={handleFileChange}
                     required={false}
+                    accept="image/png, image/jpeg"
                     disabled={isEditing}
                 />
             </div>
