@@ -14,9 +14,8 @@ class InputSanitizer
     {
         $sanitizedArray = [];
         foreach ($array as $key => $value) {
-            $sanitizedArray[$key] = self::sanitizeString($value) ?? '';
+            $sanitizedArray[$key] = is_array($value) ? self::sanitizeArray($value) : self::sanitizeString($value);
         }
-
         return $sanitizedArray;
     }
 }

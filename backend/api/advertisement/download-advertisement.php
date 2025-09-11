@@ -4,11 +4,13 @@ include_once '../../config/cors.php';
 include_once '../../config/Database.php';
 include_once '../../Advertisement/Repository/AdvertisementRepository.php';
 include_once '../../Advertisement/TemplateBuilder/PDFTemplateBuilder.php';
+include_once '../../utils/InputSanitizer.php';
 require_once __DIR__ . '/../../vendor/autoload.php';
 
 use Advertisement\TemplateBuilder\PDFTemplateBuilder;
 use Mpdf\Mpdf;
 use Mpdf\Output\Destination;
+use utils\InputSanitizer;
 
 $method = $_SERVER['REQUEST_METHOD'];
 
@@ -27,13 +29,26 @@ try {
     $advertisement = json_decode($input, true);
 
     if (!$advertisement) {
-        throw new Exception('Invalid JSON data');
+        http_response_code(400);
+        header('Content-Type: application/json');
+        echo json_encode([
+            "success" => false,
+            "message" => "Invalid JSON data"
+        ]);
+        exit();
     }
 
     if (!isset($advertisement['text']) || !isset($advertisement['company'])) {
-        throw new Exception('Missing required advertisement data');
+        http_response_code(400);
+        header('Content-Type: application/json');
+        echo json_encode([
+            "success" => false,
+            "message" => "Missing required advertisement data"
+        ]);
+        exit();
     }
 
+    $sanitizedData = InputSanitizer::sanitizeArray($advertisement);
 
     $mpdf = new Mpdf([
         'format' => 'A4',
@@ -44,16 +59,16 @@ try {
         'orientation' => 'P'
     ]);
 
-    $mpdf->SetTitle('Advertisement - ' . $advertisement['company']['name']);
-    $mpdf->SetAuthor($advertisement['company']['name']);
+    $mpdf->SetTitle('Advertisement - ' . $sanitizedData['company']['name']);
+    $mpdf->SetAuthor($sanitizedData['company']['name']);
 
     $builder = new PDFTemplateBuilder();
 
-    $html = $builder->buildAdvertisementHTML($advertisement);
+    $html = $builder->buildAdvertisementHTML($sanitizedData);
 
     $mpdf->WriteHTML($html);
 
-    $filename = 'advertisement_' . date('Y-m-d_H-i-s') . '_' . $advertisement['company']['name'] . '.pdf';
+    $filename = 'advertisement_' . date('Y-m-d_H-i-s') . '_' . $sanitizedData['company']['name'] . '.pdf';
 
     $mpdf->Output($filename, Destination::DOWNLOAD);
 

@@ -2,11 +2,9 @@
 
 namespace Advertisement\TemplateBuilder;
 
-include_once '../../utils/InputSanitizer.php';
 
 use DateTime;
 use Exception;
-use utils\InputSanitizer;
 
 class PDFTemplateBuilder
 {
@@ -134,7 +132,7 @@ class PDFTemplateBuilder
     <body>
         <div class="header">
             ' . $logoHtml . '
-            <div class="company-name">' . InputSanitizer::sanitizeString($company['name']) . '</div>
+            <div class="company-name">' . $company['name'] . '</div>
             <div style="color: #666; font-size: 14pt;">Advertisement</div>
         </div>
 
@@ -142,14 +140,14 @@ class PDFTemplateBuilder
             <h3>Company Information</h3>
             <div class="info-row">
                 <span class="info-label">Company:</span>
-                <span>' . InputSanitizer::sanitizeString($company['name']) . '</span>
+                <span>' . $company['name'] . '</span>
             </div>';
 
         if (!empty($company['ico'])) {
             $html .= '
             <div class="info-row">
                 <span class="info-label">ICO:</span>
-                <span>' . InputSanitizer::sanitizeString($company['ico']) . '</span>
+                <span>' . $company['ico'] . '</span>
             </div>';
         }
 
@@ -157,7 +155,7 @@ class PDFTemplateBuilder
             $html .= '
             <div class="info-row">
                 <span class="info-label">Address:</span>
-                <span>' . InputSanitizer::sanitizeString($address) . '</span>
+                <span>' . $address . '</span>
             </div>';
         }
 
@@ -165,7 +163,7 @@ class PDFTemplateBuilder
             $html .= '
             <div class="info-row">
                 <span class="info-label">Country:</span>
-                <span>' . InputSanitizer::sanitizeString($company['country']) . '</span>
+                <span>' . $company['country'] . '</span>
             </div>';
         }
 
@@ -175,7 +173,7 @@ class PDFTemplateBuilder
         <div class="advertisement-content">
             <h3>Advertisement Content</h3>
             <div class="advertisement-text">
-                ' . nl2br(InputSanitizer::sanitizeString($advertisement['text'])) . '
+                ' . nl2br($advertisement['text']) . '
             </div>
         </div>
 
