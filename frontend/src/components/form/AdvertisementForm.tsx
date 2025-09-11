@@ -84,11 +84,11 @@ export function AdvertisementForm(
         }
 
         if (isStringLongerThan(8, formData.company.ico)) {
-            return "IČO must be 8 characters";
+            return "ICO must have 8 characters";
         }
 
         if (isStringLongerThan(5, formData.company.postal_code)) {
-            return "Postal code must be 5 characters";
+            return "Postal code must have 5 characters";
         }
 
         return null;
