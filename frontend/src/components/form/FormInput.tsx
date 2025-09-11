@@ -1,18 +1,5 @@
 import React from "react";
-
-interface FormInputProps {
-    label: string;
-    type?: "text" | "email" | "password" | "number" | "tel" | "url" | "select" | "textarea" | "file";
-    value: string;
-    onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
-    options?: string[];
-    required?: boolean;
-    placeholder?: string;
-    className?: string;
-    disabled?: boolean;
-    accept?: string;
-    multiple?: boolean;
-}
+import type {FormInputProps} from "../../types/props/types.ts";
 
 export function FormInput(
     {
