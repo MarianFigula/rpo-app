@@ -75,7 +75,7 @@ export function FormInput(
                 <input
                     id={id}
                     type={type}
-                    value={value}
+                    value={value || ""}
                     onChange={onChange}
                     className={`${baseInputClasses}`}
                     required={required}

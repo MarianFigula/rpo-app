@@ -32,7 +32,7 @@ export interface AdvertisementFormProps {
 export interface FormInputProps {
     label: string;
     type?: "text" | "email" | "password" | "number" | "tel" | "url" | "select" | "textarea" | "file";
-    value: string;
+    value?: string;
     onChange: (event: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => void;
     options?: string[];
     required?: boolean;

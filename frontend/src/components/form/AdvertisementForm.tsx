@@ -190,7 +190,6 @@ export function AdvertisementForm(
                 <FormInput
                     label="Logo"
                     type="file"
-                    value={""}
                     onChange={handleFileChange}
                     required={false}
                     accept="image/png, image/jpeg"
