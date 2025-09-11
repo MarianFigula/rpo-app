@@ -5,11 +5,10 @@ namespace RPODataPopulator;
 
 class RPODataPopulator {
     private $conn;
-    private $baseUrl = 'https://api.statistics.sk/rpo/v1/search';
-    private $rateLimit = 1;
+    private string $baseUrl = 'https://api.statistics.sk/rpo/v1/search';
+    private int $rateLimit = 1;
 
-    // Cities to fetch
-    private $cities = [
+    private array $cities = [
         'Košice',
         'Prešov',
         'Bardejov'
@@ -48,7 +47,8 @@ class RPODataPopulator {
         return $response;
     }
 
-    private function fetchCitiesData($city) {
+    private function fetchCitiesData($city): void
+    {
         $params = [
             'addressMunicipality' => $city,
             'establishmentAfter' => '2016-01-01',
@@ -65,7 +65,7 @@ class RPODataPopulator {
         $response = $this->makeRequest($url);
 
         if ($response === false) {
-            echo "Failed to fetch data for {$city}, offset {$params['offset']}\n";
+            echo "Failed to fetch data for {$city}}\n";
             return;
         }
 
