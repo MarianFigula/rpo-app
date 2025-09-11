@@ -19,6 +19,45 @@ class CompanyRepository
 
 
     /**
+     * @param $data
+     * @return false|string
+     * @throws Exception
+     */
+    public function addCompany($data): false|string
+    {
+        if (empty($data)){
+            return false;
+        }
+
+        $query = "INSERT INTO company (name, ico, street, building_number, postal_code, city, country, logo_url) 
+            VALUES(?,?,?,?,?,?,?,?)";
+
+        try {
+            $stmt = $this->conn->prepare($query);
+            $isInserted = $stmt->execute([
+                $data['company_name'],
+                $data['company_ico'],
+                $data['company_street'],
+                $data['company_building_number'],
+                $data['company_postal_code'],
+                $data['company_city'],
+                $data['company_country'],
+                $data['company_logo_url']
+            ]);
+
+            if (!$isInserted) {
+                return false;
+            }
+
+            return $this->conn->lastInsertId();
+
+        }catch (PDOException $e){
+            throw new Exception("Database query failed: " . $e->getMessage());
+        }
+
+    }
+
+    /**
      * @param string $searchQuery
      * @param int $limit
      * @return array
@@ -91,7 +130,7 @@ class CompanyRepository
      */
     public function updateCompanyById($data) : bool
     {
-        if (empty($data) || !isset($data['id'])){
+        if (empty($data) || !isset($data['company_id'])){
             return false;
         }
 
@@ -109,15 +148,15 @@ class CompanyRepository
             $stmt = $this->conn->prepare($query);
 
             return $stmt->execute([
-                $data['name'],
-                $data['ico'],
-                $data['street'],
-                $data['building_number'],
-                $data['postal_code'],
-                $data['city'],
-                $data['country'],
-                $data['logo_url'],
-                (int)$data['id']
+                $data['company_name'],
+                $data['company_ico'],
+                $data['company_street'],
+                $data['company_building_number'],
+                $data['company_postal_code'],
+                $data['company_city'],
+                $data['company_country'],
+                $data['company_logo_url'],
+                $data['company_id']
             ]);
 
         }catch (PDOException $e) {
