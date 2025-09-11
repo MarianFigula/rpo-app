@@ -41,7 +41,7 @@ try {
     if (isset($_FILES['logo'])) {
         $allowedTypes = ['image/jpeg', 'image/jpg', 'image/png'];
         $allowedExtensions = ['jpg', 'jpeg', 'png'];
-        $maxFileSize = 5 * 1024 * 1024;
+        $maxFileSize = 2 * 1024 * 1024;
 
         $fileType = $_FILES['logo']['type'];
         $fileSize = $_FILES['logo']['size'];
