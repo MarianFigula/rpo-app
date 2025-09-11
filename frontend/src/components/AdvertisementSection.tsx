@@ -12,6 +12,9 @@ const AdvertisementSection = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [selectedCompany, setSelectedCompany] = useState<CompanyCardModel | null>(null);
     const [advertisements, setAdvertisements] = useState<AdvertisementCardModel[] | null>(null);
+    const [editingAdvertisement, setEditingAdvertisement] = useState<AdvertisementCardModel | null>(null);
+    const [isEditing, setIsEditing] = useState(false);
+
     const fetchAdvertisements = async () => {
         const serverUrl = 'http://localhost:8000'
         try {
@@ -44,11 +47,16 @@ const AdvertisementSection = () => {
         fetchAdvertisements()
     }, []);
 
-    const handleEdit = () => {
-        console.log("editing")
+    const handleEdit = (advertisement: AdvertisementCardModel) => {
+        console.log("editing advertisement")
+        console.log(advertisement)
+
+        setEditingAdvertisement(advertisement);
+        setSelectedCompany(advertisement.company);
+        setIsEditing(true);
+        setIsModalOpen(true);
     };
 
-    // to som skoncil
     const handleRemove = async (advertisemet: AdvertisementCardModel) => {
         console.log(advertisemet)
 
@@ -90,11 +98,15 @@ const AdvertisementSection = () => {
     const openModal = () => {
         setIsModalOpen(true);
         setSelectedCompany(null);
+        setEditingAdvertisement(null);
+        setIsEditing(false);
     };
 
     const closeModal = () => {
         setIsModalOpen(false);
         setSelectedCompany(null);
+        setEditingAdvertisement(null);
+        setIsEditing(false);
     };
 
     const handleDownload = () => {
@@ -102,16 +114,21 @@ const AdvertisementSection = () => {
     }
 
     const getInitialFormData = (): AdvertisementCardModel | undefined => {
-        if (!selectedCompany) return undefined;
+        if (isEditing && editingAdvertisement) {
+            return editingAdvertisement;
+        }
 
-        return {
-            id: "",
-            company: selectedCompany,
-            text: "",
-            created_at: ""
-        };
+        if (!isEditing && selectedCompany) {
+            return {
+                id: "",
+                company: selectedCompany,
+                text: "",
+                created_at: ""
+            };
+        }
+
+        return undefined;
     };
-
 
     const addAdvertisement = async (formData: AdvertisementCardModel) => {
         try {
@@ -149,9 +166,48 @@ const AdvertisementSection = () => {
         }
     }
 
-    const handleSubmit = async (formData: AdvertisementCardModel) => {
-        await addAdvertisement(formData)
+    const updateAdvertisement = async (formData: AdvertisementCardModel) => {
+        try {
+            const serverUrl: string = "http://localhost:8000";
 
+            if (!serverUrl) {
+                throw new Error('REACT_APP_SERVER_URL is not defined');
+            }
+
+            const requestData = {
+                id: formData.id,
+                text: formData.text
+            };
+
+            const response = await fetch(`${serverUrl}/api/advertisement/update-advertisement.php`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(requestData)
+            });
+
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
+            }
+
+            const data: ApiGeneralResponse = await response.json();
+            console.log('Updated advertisement:', data);
+            // todo nejak inak spravit reload
+            location.reload()
+
+        } catch (error) {
+            console.error('Error updating advertisement:', error);
+        }
+    }
+
+    const handleSubmit = async (formData: AdvertisementCardModel) => {
+        if (isEditing) {
+            await updateAdvertisement(formData);
+        } else {
+            await addAdvertisement(formData);
+        }
+        closeModal();
     }
 
     return (
@@ -175,7 +231,7 @@ const AdvertisementSection = () => {
                     <AdvertisementCard
                         key={index}
                         advertisement={ad}
-                        onEdit={handleEdit}
+                        onEdit={() => handleEdit(ad)}
                         onRemove={() => handleRemove(ad)}
                         onDownload={handleDownload}/>
                 ))}
@@ -184,16 +240,20 @@ const AdvertisementSection = () => {
                 isOpen={isModalOpen}
                 onClose={closeModal}
                 title="Advertisement"
+                isEditing={isEditing}
             >
                 <div className="space-y-4">
-                    <SearchBar
-                        searchId='search-company'
-                        placeholder={"Search Company"}
-                        onCompanySelect={(company) => setSelectedCompany(company)}
-                    />
+                    {!isEditing && (
+                        <SearchBar
+                            searchId='search-company'
+                            placeholder={"Search Company"}
+                            onCompanySelect={(company) => setSelectedCompany(company)}
+                        />
+                    )}
                     <AdvertisementForm
                         onSubmit={handleSubmit}
                         initialData={getInitialFormData()}
+                        isEditing={isEditing}
                     />
                 </div>
             </Modal>

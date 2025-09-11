@@ -23,6 +23,7 @@ export function FormInput(
         options = [],
         required = false,
         accept,
+        disabled = false,
         multiple,
         ...props
     }: FormInputProps) {
@@ -31,6 +32,9 @@ export function FormInput(
     const baseInputClasses =
         "w-[50vw] p-2.5 border border-gray-300 rounded-lg box-border " +
         "focus:outline-none focus:ring-2 focus:ring-blue-500 " +
+        (disabled
+            ? "bg-gray-100 text-gray-500 cursor-not-allowed "
+            : "") +
         (type === "file"
             ? "file:cursor-pointer file:rounded file:border-0 file:bg-gray-200 file:px-2 file:py-1 file:transition file:duration-300 hover:file:bg-gray-400 hover:file:text-white"
             : "") +

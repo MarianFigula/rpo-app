@@ -32,7 +32,6 @@ export function AdvertisementForm(
 
     useEffect(() => {
         setFormData(initialData ? initialData : emptyAdvertisement)
-
     }, [initialData]);
 
     const handleInputChange = (field: keyof AdvertisementCardModel | string) => (
@@ -56,8 +55,6 @@ export function AdvertisementForm(
             }));
         }
     };
-
-
 
     const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
@@ -113,6 +110,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('name')}
                     required
                     placeholder="Company name"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -121,6 +119,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('ico')}
                     required
                     placeholder="12345678"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -129,6 +128,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('street')}
                     required
                     placeholder="Street name"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -137,6 +137,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('building_number')}
                     required
                     placeholder="123"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -145,6 +146,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('postal_code')}
                     required
                     placeholder="12345"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -153,6 +155,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('city')}
                     required
                     placeholder="Bratislava"
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -161,6 +164,7 @@ export function AdvertisementForm(
                     onChange={handleInputChange('country')}
                     placeholder="Slovakia"
                     required
+                    disabled={isEditing}
                 />
 
                 <FormInput
@@ -179,6 +183,7 @@ export function AdvertisementForm(
                     value={formData.company.logo_url as string}
                     onChange={handleInputChange('logo_url')}
                     required={false}
+                    disabled={isEditing}
                 />
             </div>
         </Form>
