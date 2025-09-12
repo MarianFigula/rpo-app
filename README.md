@@ -127,8 +127,10 @@ curl http://localhost:8000/api/populate-data.php
   Add file size checks on the frontend.
 - **RPO API limitations:**  
   Investigate rate limiting or row caps.
-- **Use config file**
+- **Use config file:**  
   Config variables should be in .env file for future use.
+- **Image not removed when deleted advertisement**  
+Image is not removed from `public/logos` directory when advertisement is deleted.
 
 ---
 
